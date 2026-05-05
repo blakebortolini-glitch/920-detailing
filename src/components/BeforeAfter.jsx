@@ -59,7 +59,7 @@ function SliderCard({ project }) {
       <div
         ref={containerRef}
         className="relative overflow-hidden select-none cursor-col-resize"
-        style={{ aspectRatio: '16/10' }}
+        style={{ aspectRatio: '4/3' }}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
