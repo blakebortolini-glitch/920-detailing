@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import Services from '../components/Services';
 import WhyUs from '../components/WhyUs';
 import BeforeAfter from '../components/BeforeAfter';
+import Pricing from '../components/Pricing';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
@@ -14,6 +15,7 @@ export default function Home() {
       <Services />
       <WhyUs />
       <BeforeAfter />
+      <Pricing />
       <Contact />
       <Footer />
     </main>
