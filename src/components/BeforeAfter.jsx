@@ -3,33 +3,33 @@ import { useState, useRef, useCallback } from 'react';
 const projects = [
   {
     id: '01',
-    label: 'Paint Correction',
-    vehicle: '2019 BMW 3 Series — Mineral White',
-    before: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=900&auto=format&fit=crop&q=80',
-    after: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=900&auto=format&fit=crop&q=80',
-    beforeAlt: 'BMW 3 Series with heavy swirl marks and paint marring before correction',
-    afterAlt: 'BMW 3 Series with mirror-gloss paint after professional correction',
-    detail: 'Stage 2 Paint Correction — 85% defect elimination',
+    label: 'Interior Detail',
+    vehicle: 'GMC Sierra — Full Interior Restoration',
+    before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/47e36ef41_IMG_6015.jpg',
+    after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/0e353afa1_IMG_6050.jpg',
+    beforeAlt: 'GMC Sierra dirty interior with mud and debris before detailing',
+    afterAlt: 'GMC Sierra clean interior after professional detailing',
+    detail: 'Full Interior — Deep clean, floor extraction, leather treatment',
   },
   {
     id: '02',
-    label: 'Interior Detail',
-    vehicle: '2020 Ford F-150 — Crew Cab',
-    before: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=900&auto=format&fit=crop&q=80',
-    after: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop&q=80',
-    beforeAlt: 'Dirty truck interior with debris and stained seats before detailing',
-    afterAlt: 'Clean, restored truck interior with conditioned leather after detailing',
-    detail: 'Full Interior — Extraction, leather treatment, glass polish',
+    label: 'Paint & Mirror Detail',
+    vehicle: 'SUV — Exterior Paint Correction',
+    before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/e90fd2b7c_IMG_5467.jpg',
+    after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/94b146dfe_IMG_5487.jpg',
+    beforeAlt: 'SUV mirror with water spots and contamination before detailing',
+    afterAlt: 'SUV mirror with deep gloss finish after paint correction',
+    detail: 'Exterior Detail — Decontamination, paint correction, gloss finish',
   },
   {
     id: '03',
-    label: 'Ceramic Coating',
-    vehicle: '2022 Dodge Charger — Pitch Black',
-    before: 'https://images.unsplash.com/photo-1493238792000-8113da705763?w=900&auto=format&fit=crop&q=80',
-    after: 'https://images.unsplash.com/photo-1617531653332-bd46c16f4d68?w=900&auto=format&fit=crop&q=80',
-    beforeAlt: 'Black Dodge Charger with dull oxidized paint before ceramic coating',
-    afterAlt: 'Black Dodge Charger with deep gloss ceramic coating showing water beading',
-    detail: '2-Year Ceramic Coating — Post correction application',
+    label: 'Cargo Interior',
+    vehicle: 'Chevy Traverse — Full Interior Detail',
+    before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/b5de90ab0_IMG_4610.jpg',
+    after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/053dbe343_IMG_4630.jpg',
+    beforeAlt: 'Dirty SUV cargo area with debris and grime before detailing',
+    afterAlt: 'Clean SUV cargo area after professional interior detailing',
+    detail: 'Full Interior — Carpet extraction, cargo restoration',
   },
 ];
 
@@ -162,6 +162,43 @@ export default function BeforeAfter() {
             <SliderCard project={p} />
           </div>
         ))}
+      </div>
+
+      {/* After-only showcase */}
+      <div className="mt-24">
+        <div className="flex items-center gap-4 mb-10">
+          <p className="small-caps-label">More Work</p>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              src: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/de8135675_07993D36-8599-46B5-8D43-5CC28B09D325.jpg',
+              alt: 'GMC Denali HD exterior after full detail',
+              label: 'GMC Denali HD — Full Exterior',
+            },
+            {
+              src: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/7d212c82c_IMG_4453.jpg',
+              alt: 'Chevy Suburban clean interior after detail',
+              label: 'Chevy Suburban — Interior Detail',
+            },
+          ].map((img, i) => (
+            <div key={i} className="md:col-span-1">
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="w-full object-cover"
+                style={{ aspectRatio: '4/3' }}
+              />
+              <div className="pt-4 pb-6 border-b border-border">
+                <p className="small-caps-label mb-1">After</p>
+                <p className="font-inter font-semibold text-ink-black" style={{ fontSize: '1rem', letterSpacing: '-0.01em' }}>
+                  {img.label}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
