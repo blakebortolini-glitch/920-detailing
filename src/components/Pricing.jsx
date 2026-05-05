@@ -5,7 +5,7 @@ const tiers = [
     id: '01',
     name: 'Interior Detail',
     tagline: 'Complete cabin restoration',
-    startingAt: 100,
+    startingAt: 150,
     duration: '3–5 HRS',
     includes: [
       'Deep vacuum & air purge',
@@ -40,7 +40,7 @@ const tiers = [
     id: '03',
     name: 'Exterior & Paint Correction',
     tagline: 'Surface restoration at micron level',
-    startingAt: 150,
+    startingAt: 200,
     duration: '5–8 HRS',
     includes: [
       'Foam cannon pre-wash',
