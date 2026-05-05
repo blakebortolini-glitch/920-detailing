@@ -7,11 +7,14 @@ import Footer from '../components/Footer';
 
 export default function Home() {
   return (
-    <main className="font-inter bg-white text-ink-black">
+    <main className="font-inter">
       <Navbar />
       <Hero />
+      <div className="technical-rule" />
       <Services />
+      <div className="technical-rule" />
       <WhyUs />
+      <div className="technical-rule" />
       <Contact />
       <Footer />
     </main>

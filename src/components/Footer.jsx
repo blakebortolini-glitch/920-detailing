@@ -1,30 +1,55 @@
 export default function Footer() {
-  const year = new Date().getFullYear();
+  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <footer className="border-t border-border px-6 md:px-16 py-12">
-      <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+    <footer className="border-t border-border bg-ink-black text-white">
+      <div className="px-6 md:px-16 max-w-screen-xl mx-auto py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+
+        {/* Brand */}
         <div>
-          <span className="font-inter font-black text-ink-black" style={{ fontSize: '1.4rem', letterSpacing: '-0.04em' }}>
-            920 DETAILING
-          </span>
-          <p className="small-caps-label mt-1">Precision Surface Care</p>
+          <p className="font-inter font-black text-white text-2xl mb-3" style={{ letterSpacing: '-0.04em' }}>920</p>
+          <p className="small-caps-label text-white/40 mb-4">Precision Surface Care</p>
+          <p className="text-white/50" style={{ fontSize: '0.85rem', lineHeight: 1.7 }}>
+            Professional auto detailing. Interior, exterior, and ceramic protection done right the first time.
+          </p>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-4 md:gap-10 items-start md:items-center">
-          {['services', 'process', 'contact'].map((s) => (
-            <button
-              key={s}
-              onClick={() => document.getElementById(s)?.scrollIntoView({ behavior: 'smooth' })}
-              className="small-caps-label text-ink-black hover:text-tech-grey transition-colors"
-            >
-              {s}
-            </button>
-          ))}
+        {/* Navigation */}
+        <div>
+          <p className="small-caps-label text-white/40 mb-6">Navigate</p>
+          <ul className="space-y-3">
+            {[['services', 'Services'], ['process', 'Why 920'], ['contact', 'Contact']].map(([id, label]) => (
+              <li key={id}>
+                <button
+                  onClick={() => scrollTo(id)}
+                  className="text-white/60 hover:text-white transition-colors"
+                  style={{ fontSize: '0.9rem' }}
+                >
+                  {label}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <p className="small-caps-label text-tech-grey" style={{ fontSize: '0.6rem' }}>
-          © {year} 920 Detailing. All Rights Reserved.
+        {/* Contact */}
+        <div>
+          <p className="small-caps-label text-white/40 mb-6">Contact</p>
+          <a href="tel:+19205550000" className="font-inter font-bold text-white hover:text-white/70 transition-colors block mb-2" style={{ fontSize: '1.1rem' }}>
+            (920) 555-0000
+          </a>
+          <p className="text-white/50" style={{ fontSize: '0.85rem' }}>Wisconsin, USA</p>
+          <p className="text-white/40 mt-1" style={{ fontSize: '0.8rem' }}>By Appointment Only</p>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="border-t border-white/10 px-6 md:px-16 py-5 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p className="small-caps-label text-white/30" style={{ fontSize: '0.6rem' }}>
+          © {new Date().getFullYear()} 920 Detailing. All rights reserved.
+        </p>
+        <p className="small-caps-label text-white/20" style={{ fontSize: '0.6rem' }}>
+          Wisconsin, USA
         </p>
       </div>
     </footer>
