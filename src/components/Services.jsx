@@ -7,7 +7,7 @@ const services = [
     name: 'Interior Detailing',
     tagline: 'Complete cabin restoration',
     description:
-      'A true interior detail isn\'t just a vacuum and a wipe-down. We systematically disassemble, extract, and restore every surface inside your vehicle — treating leather, fabric, plastics, glass, and trim with chemistry-specific products. You\'re paying for hours of focused labor and professional-grade tools, not a 10-minute car wash add-on.',
+      'A true interior detail isn\'t just a vacuum and a wipe-down. We systematically disassemble, extract, and restore every surface inside your vehicle, treating leather, fabric, plastics, glass, and trim with chemistry-specific products. You\'re paying for hours of focused labor and professional-grade tools, not a 10-minute car wash add-on.',
     process: [
       { step: 'Deep Vacuum & Air Purge', detail: 'Compressed air extraction from every vent, seam, and crevice.' },
       { step: 'Fabric / Leather Extraction', detail: 'Hot-water extraction or pH-balanced leather cleaner, depending on material.' },
@@ -16,7 +16,7 @@ const services = [
       { step: 'Conditioning & Protection', detail: 'Leather conditioned; plastics and vinyl protected against UV degradation.' },
       { step: 'Final Inspection', detail: 'White-glove check under LED lighting. Zero tolerance for missed spots.' },
     ],
-    result: 'A cabin that smells, looks, and feels like new — chemically protected against future soiling.',
+    result: 'A cabin that smells, looks, and feels like new, chemically protected against future soiling.',
     image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop&q=80',
     imageAlt: 'Macro shot of clean leather interior stitching with pristine matte finish',
     specs: [{ label: 'Duration', value: '3–6 HRS' }, { label: 'Products', value: 'PH NEUTRAL' }],

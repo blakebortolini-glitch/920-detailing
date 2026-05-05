@@ -4,32 +4,32 @@ const projects = [
   {
     id: '01',
     label: 'Interior Detail',
-    vehicle: 'GMC Sierra — Full Interior Restoration',
+    vehicle: 'GMC Sierra, Full Interior Restoration',
     before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/47e36ef41_IMG_6015.jpg',
     after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/0e353afa1_IMG_6050.jpg',
     beforeAlt: 'GMC Sierra dirty interior with mud and debris before detailing',
     afterAlt: 'GMC Sierra clean interior after professional detailing',
-    detail: 'Full Interior — Deep clean, floor extraction, leather treatment',
+    detail: 'Full Interior, Deep clean, floor extraction, leather treatment',
   },
   {
     id: '02',
     label: 'Paint & Mirror Detail',
-    vehicle: 'SUV — Exterior Paint Correction',
+    vehicle: 'SUV, Exterior Paint Correction',
     before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/e90fd2b7c_IMG_5467.jpg',
     after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/94b146dfe_IMG_5487.jpg',
     beforeAlt: 'SUV mirror with water spots and contamination before detailing',
     afterAlt: 'SUV mirror with deep gloss finish after paint correction',
-    detail: 'Exterior Detail — Decontamination, paint correction, gloss finish',
+    detail: 'Exterior Detail, Decontamination, paint correction, gloss finish',
   },
   {
     id: '03',
     label: 'Cargo Interior',
-    vehicle: 'Chevy Traverse — Full Interior Detail',
+    vehicle: 'Chevy Traverse, Full Interior Detail',
     before: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/b5de90ab0_IMG_4610.jpg',
     after: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/053dbe343_IMG_4630.jpg',
     beforeAlt: 'Dirty SUV cargo area with debris and grime before detailing',
     afterAlt: 'Clean SUV cargo area after professional interior detailing',
-    detail: 'Full Interior — Carpet extraction, cargo restoration',
+    detail: 'Full Interior, Carpet extraction, cargo restoration',
   },
 ];
 
@@ -86,7 +86,7 @@ function SliderCard({ project }) {
             src={project.before}
             alt={project.beforeAlt}
             className="absolute inset-0 h-full object-cover"
-            style={{ width: containerRef.current?.offsetWidth || '100%' }}
+            style={{ width: '100%' }}
             draggable={false}
           />
         </div>
@@ -175,12 +175,12 @@ export default function BeforeAfter() {
             {
               src: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/de8135675_07993D36-8599-46B5-8D43-5CC28B09D325.jpg',
               alt: 'GMC Denali HD exterior after full detail',
-              label: 'GMC Denali HD — Full Exterior',
+              label: 'GMC Denali HD, Full Exterior',
             },
             {
               src: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/7d212c82c_IMG_4453.jpg',
               alt: 'Chevy Suburban clean interior after detail',
-              label: 'Chevy Suburban — Interior Detail',
+              label: 'Chevy Suburban, Interior Detail',
             },
           ].map((img, i) => (
             <div key={i} className="md:col-span-1">
