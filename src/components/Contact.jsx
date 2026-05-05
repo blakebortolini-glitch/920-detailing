@@ -45,12 +45,12 @@ export default function Contact() {
             <div className="mb-10">
               <p className="small-caps-label mb-3">Direct Line</p>
               <a
-                href="tel:+19205550000"
+                href="tel:+19202553123"
                 className="font-inter font-black text-ink-black hover:text-tech-grey transition-colors block"
                 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1, letterSpacing: '-0.04em' }}
                 aria-label="Call 920 Detailing"
               >
-                (920) 555-0000
+                (920) 255-3123
               </a>
               <p className="small-caps-label mt-2 text-tech-grey">Call or text — we respond fast</p>
             </div>
@@ -58,7 +58,7 @@ export default function Contact() {
             <div className="mb-10">
               <p className="small-caps-label mb-2">Location</p>
               <p className="font-inter font-semibold text-ink-black" style={{ fontSize: '1rem' }}>920 Detailing</p>
-              <p className="text-tech-grey" style={{ fontSize: '0.95rem' }}>Wisconsin, USA</p>
+              <p className="text-tech-grey" style={{ fontSize: '0.95rem' }}>Kewaunee, Wisconsin</p>
             </div>
 
             <div>

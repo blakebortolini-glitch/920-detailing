@@ -35,10 +35,10 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <p className="small-caps-label text-white/40 mb-6">Contact</p>
-          <a href="tel:+19205550000" className="font-inter font-bold text-white hover:text-white/70 transition-colors block mb-2" style={{ fontSize: '1.1rem' }}>
-            (920) 555-0000
+          <a href="tel:+19202553123" className="font-inter font-bold text-white hover:text-white/70 transition-colors block mb-2" style={{ fontSize: '1.1rem' }}>
+            (920) 255-3123
           </a>
-          <p className="text-white/50" style={{ fontSize: '0.85rem' }}>Wisconsin, USA</p>
+          <p className="text-white/50" style={{ fontSize: '0.85rem' }}>Kewaunee, Wisconsin</p>
           <p className="text-white/40 mt-1" style={{ fontSize: '0.8rem' }}>By Appointment Only</p>
         </div>
       </div>
@@ -49,7 +49,7 @@ export default function Footer() {
           © {new Date().getFullYear()} 920 Detailing. All rights reserved.
         </p>
         <p className="small-caps-label text-white/20" style={{ fontSize: '0.6rem' }}>
-          Wisconsin, USA
+          Kewaunee, Wisconsin
         </p>
       </div>
     </footer>
