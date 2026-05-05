@@ -182,6 +182,11 @@ export default function BeforeAfter() {
               alt: 'Chevy Suburban clean interior after detail',
               label: 'Chevy Suburban, Interior Detail',
             },
+            {
+              src: 'https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/f3eb8b12f_IMG_4626.jpg',
+              alt: 'Clean rear interior seats after professional detailing',
+              label: 'SUV, Rear Interior Detail',
+            },
           ].map((img, i) => (
             <div key={i} className="md:col-span-1">
               <img
