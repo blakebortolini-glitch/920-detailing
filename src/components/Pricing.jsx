@@ -5,11 +5,11 @@ const tiers = [
     id: '01',
     name: 'Interior Detail',
     tagline: 'Complete cabin restoration',
-    startingAt: 150,
+    startingAt: 100,
     duration: '3–5 HRS',
     includes: [
       'Deep vacuum & air purge',
-      'Fabric / leather extraction',
+      'Carpet & seat refresh/cleaning',
       'Surface decontamination',
       'Interior glass polish',
       'Conditioning & UV protection',
@@ -19,11 +19,29 @@ const tiers = [
   },
   {
     id: '02',
+    name: 'Interior + Exterior Bundle',
+    tagline: 'Most popular, best value',
+    startingAt: 185,
+    duration: '6–10 HRS',
+    featured: true,
+    includes: [
+      'Full interior refresh & clean',
+      'Carpet & seat cleaning',
+      'Foam cannon pre-wash',
+      'Two-bucket hand wash',
+      'Iron & tar decontamination',
+      'Clay bar treatment',
+      'Paint gauge measurement',
+      'Stage 1 polish',
+    ],
+    note: 'Best value for a complete inside-and-out transformation.',
+  },
+  {
+    id: '03',
     name: 'Exterior & Paint Correction',
     tagline: 'Surface restoration at micron level',
-    startingAt: 300,
+    startingAt: 150,
     duration: '5–8 HRS',
-    featured: true,
     includes: [
       'Foam cannon pre-wash',
       'Two-bucket hand wash',
@@ -35,7 +53,7 @@ const tiers = [
     note: 'Final price based on paint condition severity.',
   },
   {
-    id: '03',
+    id: '04',
     name: 'Ceramic Coating',
     tagline: 'Nanotechnology surface protection',
     startingAt: 600,
@@ -76,7 +94,7 @@ export default function Pricing() {
         </div>
 
         {/* Tiers */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-l border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-border">
           {tiers.map((tier) => (
             <div
               key={tier.id}
