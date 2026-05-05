@@ -217,6 +217,47 @@ export default function Pricing() {
           ))}
         </div>
 
+        {/* Add-Ons */}
+        <div className="mt-0 border-t border-l border-border">
+          <div className="border-b border-r border-border p-8 md:p-10">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <p className="small-caps-label mb-2">Interior Add-Ons</p>
+                <h3
+                  className="font-inter font-black text-ink-black"
+                  style={{ fontSize: 'clamp(1.3rem, 3vw, 1.8rem)', letterSpacing: '-0.03em', lineHeight: 1.05 }}
+                >
+                  Customize Your Detail
+                </h3>
+              </div>
+              <span className="font-mono text-tech-grey" style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}>ADD TO ANY SERVICE</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-border">
+              {[
+                { name: 'Pet Hair Removal', price: '$25–$50', note: 'Price depends on severity and coverage area.' },
+                { name: 'Steam Cleaning', price: '$15', note: 'Full interior steam sanitization.' },
+                { name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Price depends on stain severity and area.' },
+                { name: 'Odor Elimination', price: '$10–$40', note: 'Price depends on severity of odor.' },
+              ].map((addon, i) => (
+                <div key={i} className="border-b border-r border-border p-6">
+                  <p className="font-mono text-tech-grey mb-3" style={{ fontSize: '0.6rem', letterSpacing: '0.12em' }}>
+                    /{String(i + 1).padStart(2, '0')}
+                  </p>
+                  <p className="font-inter font-bold text-ink-black mb-2" style={{ fontSize: '0.95rem', letterSpacing: '-0.01em' }}>
+                    {addon.name}
+                  </p>
+                  <p className="font-inter font-black text-ink-black mb-3" style={{ fontSize: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    {addon.price}
+                  </p>
+                  <p className="text-tech-grey" style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
+                    {addon.note}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Footer note */}
         <div className="mt-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-8 border-t border-border">
           <p className="text-tech-grey" style={{ fontSize: '0.85rem' }}>
