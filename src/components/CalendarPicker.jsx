@@ -13,8 +13,13 @@ const TIME_SLOTS = [
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-// Sundays (0) are closed
-const isDisabled = (date) => isBefore(date, today) || date.getDay() === 0;
+// May 2026: only Sundays are open; all other months: Mon–Sat open, Sun closed
+const isDisabled = (date) => {
+  if (isBefore(date, today)) return true;
+  const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4; // month is 0-indexed
+  if (isMay2026) return date.getDay() !== 0; // only Sundays available in May
+  return date.getDay() === 0; // Sundays closed all other months
+};
 
 export default function CalendarPicker({ selectedDate, selectedTime, onDateChange, onTimeChange }) {
   const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate) : new Date());
