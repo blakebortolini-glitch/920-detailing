@@ -27,14 +27,19 @@ export default function Navbar() {
       }}
     >
       <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex items-center justify-between h-16">
-        <img
-          src="https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/2e6205b93_A9FC99FF-3B15-4B74-89A3-67498ADDFCF3.png"
-          alt="920 Detailing logo"
-          className="h-10 w-auto"
-        />
+        <Link to="/">
+          <img
+            src="https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/2e6205b93_A9FC99FF-3B15-4B74-89A3-67498ADDFCF3.png"
+            alt="920 Detailing logo"
+            className="h-10 w-auto"
+          />
+        </Link>
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-10">
+          <Link to="/" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
+            home
+          </Link>
           {['services', 'process', 'contact'].map((s) => (
             <button
               key={s}
@@ -63,6 +68,9 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-border px-6 py-6 flex flex-col gap-6">
+          <Link to="/" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
+            home
+          </Link>
           {['services', 'process', 'contact'].map((s) => (
             <button
               key={s}
