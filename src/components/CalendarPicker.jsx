@@ -17,7 +17,7 @@ today.setHours(0, 0, 0, 0);
 const isDisabled = (date) => {
   if (isBefore(date, today)) return true;
   const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4; // month is 0-indexed
-  if (isMay2026) return date.getDay() !== 0; // only Sundays available in May
+  if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6; // only Sundays & Saturdays available in May
   return date.getDay() === 0; // Sundays closed all other months
 };
 
