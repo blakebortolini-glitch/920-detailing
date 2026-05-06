@@ -5,10 +5,6 @@ import {
   addMonths, subMonths, addDays, isBefore, isSameDay, isSameMonth,
 } from 'date-fns';
 
-const TIME_SLOTS = [
-  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
-];
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -27,7 +23,7 @@ const isDisabled = (date) => {
   return date.getDay() === 0;
 };
 
-export default function CalendarPicker({ selectedDate, selectedTime, onDateChange, onTimeChange }) {
+export default function CalendarPicker({ selectedDate, onDateChange }) {
   const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate) : new Date());
 
   const monthStart = startOfMonth(viewMonth);
@@ -50,7 +46,6 @@ export default function CalendarPicker({ selectedDate, selectedTime, onDateChang
   const handleDayClick = (date) => {
     if (isDisabled(date)) return;
     onDateChange(format(date, 'yyyy-MM-dd'));
-    onTimeChange(''); // reset time when date changes
   };
 
   const parsedSelected = selectedDate ? new Date(selectedDate + 'T12:00:00') : null;
@@ -136,33 +131,12 @@ export default function CalendarPicker({ selectedDate, selectedTime, onDateChang
         ))}
       </div>
 
-      {/* Time slot picker — shown after date is selected */}
+      {/* Confirmation of selected date */}
       {selectedDate && (
-        <div className="mt-6">
-          <p className="small-caps-label mb-3">
-            Available Times — {parsedSelected ? format(parsedSelected, 'EEEE, MMMM d') : ''}
+        <div className="mt-4 p-3 border border-ink-black bg-secondary">
+          <p className="small-caps-label text-ink-black">
+            Selected — {parsedSelected ? format(parsedSelected, 'EEEE, MMMM d, yyyy') : ''}
           </p>
-          <div className="grid grid-cols-3 gap-2">
-            {TIME_SLOTS.map((slot) => (
-              <button
-                key={slot}
-                type="button"
-                onClick={() => onTimeChange(slot)}
-                className="py-3 px-2 border text-center transition-colors"
-                style={{
-                  fontSize: '0.78rem',
-                  fontFamily: 'IBM Plex Mono, monospace',
-                  letterSpacing: '0.06em',
-                  borderColor: selectedTime === slot ? '#0A0A0A' : 'hsl(var(--border))',
-                  background: selectedTime === slot ? '#0A0A0A' : '#FFFFFF',
-                  color: selectedTime === slot ? '#FFFFFF' : '#0A0A0A',
-                  minHeight: 44,
-                }}
-              >
-                {slot}
-              </button>
-            ))}
-          </div>
         </div>
       )}
     </div>

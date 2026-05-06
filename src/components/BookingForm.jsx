@@ -29,7 +29,7 @@ export default function BookingForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!form.name || !form.phone || !form.vehicle || !form.service || !form.date || !form.time) {
+    if (!form.name || !form.phone || !form.vehicle || !form.service || !form.date) {
       setError('Please fill in all required fields.');
       return;
     }
@@ -100,13 +100,11 @@ export default function BookingForm() {
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
           <CalendarDays size={14} className="text-tech-grey" />
-          <p className="small-caps-label">Preferred Date & Time</p>
+          <p className="small-caps-label">Preferred Date</p>
         </div>
         <CalendarPicker
           selectedDate={form.date}
-          selectedTime={form.time}
           onDateChange={(val) => setDirect('date', val)}
-          onTimeChange={(val) => setDirect('time', val)}
         />
       </div>
 
