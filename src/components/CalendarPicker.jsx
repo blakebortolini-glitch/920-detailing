@@ -11,7 +11,7 @@ today.setHours(0, 0, 0, 0);
 
 // Fully booked dates (yyyy-MM-dd)
 const BOOKED_DATES = new Set([
-  '2026-05-09', '2026-05-10', '2026-05-16', '2026-05-17', '2026-05-23', '2026-05-24',
+  '2026-05-09', '2026-05-16', '2026-05-17', '2026-05-23', '2026-05-24',
 ]);
 
 // May 2026: only Sat/Sun open; all other months: Mon–Sat open, Sun closed
