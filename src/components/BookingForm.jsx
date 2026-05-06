@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Clock, Car, User, CheckCircle } from 'lucide-react';
+import { ArrowRight, CalendarDays, Car, User, CheckCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import CalendarPicker from './CalendarPicker';
 
 const services = [
   { value: 'interior', label: 'Interior Detailing', price: 'From $150' },
@@ -10,12 +11,6 @@ const services = [
   { value: 'unsure', label: 'Not Sure — Need a Quote', price: '' },
 ];
 
-const timeSlots = [
-  '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM',
-];
-
-const today = new Date().toISOString().split('T')[0];
 
 export default function BookingForm() {
   const [form, setForm] = useState({
@@ -107,26 +102,12 @@ export default function BookingForm() {
           <CalendarDays size={14} className="text-tech-grey" />
           <p className="small-caps-label">Preferred Date & Time</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label className="small-caps-label block mb-2">Date *</label>
-            <input
-              type="date"
-              min={today}
-              value={form.date}
-              onChange={set('date')}
-              className="input-underline"
-              required
-            />
-          </div>
-          <div>
-            <label className="small-caps-label block mb-2">Time *</label>
-            <select value={form.time} onChange={set('time')} className="input-underline" required>
-              <option value="">Select a time…</option>
-              {timeSlots.map((t) => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
-        </div>
+        <CalendarPicker
+          selectedDate={form.date}
+          selectedTime={form.time}
+          onDateChange={(val) => setDirect('date', val)}
+          onTimeChange={(val) => setDirect('time', val)}
+        />
       </div>
 
       {/* Vehicle Info */}
