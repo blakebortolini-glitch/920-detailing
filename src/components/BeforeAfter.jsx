@@ -102,16 +102,16 @@ function SliderCard({ project }) {
           className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 pointer-events-none"
           style={{ left: `${sliderPos}%` }}
         >
-          <div className="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center border border-border">
+          <div className="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center" style={{ border: '2px solid hsl(214, 89%, 52%)' }}>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M5 4l-3 4 3 4M11 4l3 4-3 4" stroke="#0A0A0A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M5 4l-3 4 3 4M11 4l3 4-3 4" stroke="hsl(214, 89%, 52%)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
 
         {/* Labels */}
         <div className="absolute bottom-4 left-4 pointer-events-none">
-          <span className="small-caps-label bg-black/70 text-white px-2 py-1" style={{ fontSize: '0.6rem' }}>Before</span>
+          <span className="small-caps-label px-2 py-1" style={{ fontSize: '0.6rem', background: 'hsl(214, 89%, 52%)', color: '#fff' }}>Before</span>
         </div>
         <div className="absolute bottom-4 right-4 pointer-events-none">
           <span className="small-caps-label bg-black/70 text-white px-2 py-1" style={{ fontSize: '0.6rem' }}>After</span>
@@ -140,7 +140,7 @@ export default function BeforeAfter() {
   return (
     <section id="gallery" className="py-24 md:py-36 px-6 md:px-16 max-w-screen-xl mx-auto">
       <div className="mb-16">
-        <p className="small-caps-label mb-4">The Work</p>
+        <p className="small-caps-label mb-4" style={{ color: 'hsl(214, 89%, 52%)' }}>The Work</p>
         <h2
           className="font-inter font-black text-ink-black"
           style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)', lineHeight: 0.9, letterSpacing: '-0.04em' }}
@@ -167,7 +167,7 @@ export default function BeforeAfter() {
       {/* After-only showcase */}
       <div className="mt-24">
         <div className="flex items-center gap-4 mb-10">
-          <p className="small-caps-label">More Work</p>
+          <p className="small-caps-label" style={{ color: 'hsl(214, 89%, 52%)' }}>More Work</p>
           <div className="h-px flex-1 bg-border" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -88,7 +88,7 @@ export default function WhyUs() {
           {pillars.map((p) => (
             <div key={p.label} className="border-b border-r border-border p-8 md:p-10 bg-white hover:bg-[#FAFAFA] transition-colors">
               <div className="mb-6 w-12 h-12 flex items-center justify-center border" style={{ borderColor: 'hsl(214, 89%, 52%, 0.4)' }}>{p.icon}</div>
-              <p className="small-caps-label mb-3">{p.label}</p>
+              <p className="small-caps-label mb-3" style={{ color: 'hsl(214, 89%, 52%)' }}>{p.label}</p>
               <h3 className="font-inter font-bold text-ink-black mb-3" style={{ fontSize: '1.15rem', letterSpacing: '-0.02em' }}>
                 {p.title}
               </h3>

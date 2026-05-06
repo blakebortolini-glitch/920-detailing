@@ -85,7 +85,7 @@ function ServiceCard({ service, index }) {
             {service.specs.map((s) => (
               <div key={s.label}>
                 <p className="small-caps-label">{s.label}</p>
-                <p className="font-mono text-ink-black font-medium" style={{ fontSize: '0.75rem', letterSpacing: '0.08em' }}>{s.value}</p>
+                <p className="font-mono font-medium" style={{ fontSize: '0.75rem', letterSpacing: '0.08em', color: 'hsl(214, 89%, 52%)' }}>{s.value}</p>
               </div>
             ))}
           </div>
@@ -110,7 +110,7 @@ function ServiceCard({ service, index }) {
             <ol className="space-y-0">
               {service.process.map((p, i) => (
                 <li key={i} className="flex gap-4 py-4 border-t border-border">
-                  <span className="font-mono text-tech-grey flex-shrink-0" style={{ fontSize: '0.65rem', marginTop: '2px' }}>
+                  <span className="font-mono flex-shrink-0" style={{ fontSize: '0.65rem', marginTop: '2px', color: 'hsl(214, 89%, 52%)' }}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <div>

@@ -157,7 +157,7 @@ export default function Pricing() {
                   </div>
                   <p
                     className="font-mono mt-2"
-                    style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: '#767676' }}
+                    style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: 'hsl(214, 89%, 52%)' }}
                   >
                     {tier.duration}
                   </p>
