@@ -13,12 +13,18 @@ const TIME_SLOTS = [
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-// May 2026: only Sundays are open; all other months: Mon–Sat open, Sun closed
+// Fully booked dates (yyyy-MM-dd)
+const BOOKED_DATES = new Set([
+  '2026-05-09', '2026-05-10', '2026-05-16', '2026-05-17', '2026-05-23', '2026-05-24',
+]);
+
+// May 2026: only Sat/Sun open; all other months: Mon–Sat open, Sun closed
 const isDisabled = (date) => {
   if (isBefore(date, today)) return true;
-  const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4; // month is 0-indexed
-  if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6; // only Sundays & Saturdays available in May
-  return date.getDay() === 0; // Sundays closed all other months
+  if (BOOKED_DATES.has(format(date, 'yyyy-MM-dd'))) return true;
+  const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4;
+  if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6;
+  return date.getDay() === 0;
 };
 
 export default function CalendarPicker({ selectedDate, selectedTime, onDateChange, onTimeChange }) {
