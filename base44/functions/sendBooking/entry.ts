@@ -55,7 +55,33 @@ Deno.serve(async (req) => {
 
     if (!twilioRes.ok) {
       const err = await twilioRes.text();
-      console.error('Twilio error:', err);
+      console.error('Twilio owner SMS error:', err);
+    }
+
+    // 4. Send confirmation SMS to customer (if phone provided)
+    if (phone) {
+      const customerSmsBody = `Hi ${name}! Your booking request with 920 Detailing has been received.\n\nService: ${serviceLabel}\nVehicle: ${year ? year + ' ' : ''}${vehicle}\nDate: ${date} @ ${time}\n\nWe'll confirm your appointment within 24 hrs. Questions? Call/text (920) 255-3123.`;
+
+      const customerSmsRes = await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            To: phone,
+            From: fromPhone,
+            Body: customerSmsBody,
+          }),
+        }
+      );
+
+      if (!customerSmsRes.ok) {
+        const err = await customerSmsRes.text();
+        console.error('Twilio customer SMS error:', err);
+      }
     }
 
     return Response.json({ success: true });
