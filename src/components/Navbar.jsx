@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -43,9 +44,9 @@ export default function Navbar() {
               {s}
             </button>
           ))}
-          <button onClick={() => scrollTo('contact')} className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem' }}>
+          <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem' }}>
             Book Now
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -71,9 +72,9 @@ export default function Navbar() {
               {s}
             </button>
           ))}
-          <button onClick={() => scrollTo('contact')} className="btn-primary w-full justify-center">
+          <Link to="/booking" className="btn-primary w-full justify-center" onClick={() => setMenuOpen(false)}>
             Book Now
-          </button>
+          </Link>
         </div>
       )}
     </nav>

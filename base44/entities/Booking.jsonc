@@ -1,0 +1,69 @@
+{
+  "name": "Booking",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Customer full name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Customer phone number"
+    },
+    "email": {
+      "type": "string",
+      "description": "Customer email"
+    },
+    "vehicle": {
+      "type": "string",
+      "description": "Vehicle make and model"
+    },
+    "year": {
+      "type": "string",
+      "description": "Vehicle year"
+    },
+    "service": {
+      "type": "string",
+      "enum": [
+        "interior",
+        "exterior",
+        "ceramic",
+        "full",
+        "unsure"
+      ],
+      "description": "Service type requested"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Preferred appointment date"
+    },
+    "time": {
+      "type": "string",
+      "description": "Preferred appointment time"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes from customer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "confirmed",
+        "completed",
+        "cancelled"
+      ],
+      "default": "new",
+      "description": "Booking status"
+    }
+  },
+  "required": [
+    "name",
+    "phone",
+    "vehicle",
+    "service",
+    "date",
+    "time"
+  ]
+}
