@@ -1,0 +1,50 @@
+{
+  "name": "Review",
+  "type": "object",
+  "properties": {
+    "customer_name": {
+      "type": "string",
+      "description": "Customer full name"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Star rating from 1 to 5"
+    },
+    "review_text": {
+      "type": "string",
+      "description": "Written review from the customer"
+    },
+    "service": {
+      "type": "string",
+      "enum": [
+        "interior",
+        "exterior",
+        "ceramic",
+        "full",
+        "unsure"
+      ],
+      "description": "Service that was performed"
+    },
+    "vehicle": {
+      "type": "string",
+      "description": "Vehicle make, model, and year"
+    },
+    "photo_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of uploaded vehicle photos"
+    },
+    "approved": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the review is approved to show on homepage"
+    }
+  },
+  "required": [
+    "customer_name",
+    "rating",
+    "review_text"
+  ]
+}

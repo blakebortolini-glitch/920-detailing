@@ -9,6 +9,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Admin from './pages/Admin';
+import SubmitReview from './pages/SubmitReview';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -39,6 +40,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Home />} />
       <Route path="/booking" element={<Booking />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/submit-review" element={<SubmitReview />} />
       {/* Add your page Route elements here */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>

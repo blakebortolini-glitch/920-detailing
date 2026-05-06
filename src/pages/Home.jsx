@@ -5,6 +5,7 @@ import WhyUs from '../components/WhyUs';
 import BeforeAfter from '../components/BeforeAfter';
 import Pricing from '../components/Pricing';
 import Contact from '../components/Contact';
+import Reviews from '../components/Reviews';
 import Footer from '../components/Footer';
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
       <WhyUs />
       <BeforeAfter />
       <Pricing />
+      <Reviews />
       <Contact />
       <Footer />
     </main>
