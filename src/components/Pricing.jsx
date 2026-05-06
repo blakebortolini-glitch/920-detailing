@@ -96,7 +96,7 @@ export default function Pricing() {
             <div
               key={tier.id}
               className="border-b border-r border-border flex flex-col"
-              style={{ background: tier.featured ? '#0A0A0A' : '#FFFFFF' }}
+              style={{ background: tier.featured ? '#0A0A0A' : '#FFFFFF', ...(tier.featured ? { outline: '2px solid hsl(214, 89%, 52%)', outlineOffset: '-2px' } : {}) }}
             >
               {/* Top */}
               <div className="p-8 md:p-10 flex-1">

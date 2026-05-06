@@ -121,7 +121,7 @@ function ServiceCard({ service, index }) {
               ))}
             </ol>
 
-            <div className="mt-8 p-5 border border-ink-black">
+            <div className="mt-8 p-5 border" style={{ borderColor: 'hsl(214, 89%, 52%)' }}>
               <p className="small-caps-label mb-2">The Result</p>
               <p className="text-ink-black font-medium" style={{ fontSize: '0.95rem' }}>{service.result}</p>
             </div>

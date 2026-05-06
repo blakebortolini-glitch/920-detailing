@@ -67,7 +67,7 @@ export default function Contact() {
               <p className="text-tech-grey" style={{ fontSize: '0.85rem', marginTop: 4 }}>By appointment only</p>
             </div>
 
-            <div className="mt-12 p-6 border border-border">
+            <div className="mt-12 p-6 border" style={{ borderColor: 'hsl(214, 89%, 52%)' }}>
               <p className="small-caps-label mb-2">Response Time</p>
               <p className="font-mono text-ink-black font-medium" style={{ fontSize: '0.75rem', letterSpacing: '0.08em' }}>
                 &lt; 24 HRS GUARANTEED
