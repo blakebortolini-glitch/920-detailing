@@ -44,7 +44,7 @@ export default function Navbar() {
               {s}
             </button>
           ))}
-          <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem' }}>
+          <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem', background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
             Book Now
           </Link>
         </div>
@@ -72,7 +72,7 @@ export default function Navbar() {
               {s}
             </button>
           ))}
-          <Link to="/booking" className="btn-primary w-full justify-center" onClick={() => setMenuOpen(false)}>
+          <Link to="/booking" className="btn-primary w-full justify-center" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }} onClick={() => setMenuOpen(false)}>
             Book Now
           </Link>
         </div>

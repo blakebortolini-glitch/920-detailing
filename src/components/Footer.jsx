@@ -35,7 +35,7 @@ export default function Footer() {
         {/* Contact */}
         <div>
           <p className="small-caps-label text-white/40 mb-6">Contact</p>
-          <a href="tel:+19202553123" className="font-inter font-bold text-white hover:text-white/70 transition-colors block mb-2" style={{ fontSize: '1.1rem' }}>
+          <a href="tel:+19202553123" className="font-inter font-bold transition-colors block mb-2" style={{ fontSize: '1.1rem', color: 'hsl(214, 89%, 65%)' }}>
             (920) 255-3123
           </a>
           <p className="text-white/50" style={{ fontSize: '0.85rem' }}>Kewaunee, Wisconsin</p>

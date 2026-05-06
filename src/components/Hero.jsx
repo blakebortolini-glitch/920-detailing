@@ -44,7 +44,7 @@ export default function Hero() {
       {/* Center hero text */}
       <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-16 max-w-screen-xl mx-auto" style={{ left: 0, right: 0 }}>
         <div>
-          <p className="small-caps-label text-white/50 mb-6">920 Detailing — Precision Surface Care</p>
+          <p className="small-caps-label mb-6" style={{ color: 'hsl(214, 89%, 65%)' }}>920 Detailing — Precision Surface Care</p>
           <h1
             className="hero-heading font-inter font-black text-white"
             style={{ fontSize: 'clamp(3.5rem, 10vw, 9rem)' }}
@@ -59,7 +59,7 @@ export default function Hero() {
 
       {/* Bottom-left CTA */}
       <div className="absolute bottom-10 left-6 md:left-16 flex items-end gap-8">
-        <button onClick={scrollToContact} className="btn-primary">
+        <button onClick={scrollToContact} className="btn-primary" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
           Book Your Detail
           <ArrowDownRight size={16} />
         </button>

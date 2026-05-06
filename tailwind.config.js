@@ -44,7 +44,8 @@ module.exports = {
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',
   			'ink-black': '#0A0A0A',
-  			'tech-grey': '#767676',
+  				'tech-grey': '#767676',
+  				'accent-blue': 'hsl(var(--accent-blue))',
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
