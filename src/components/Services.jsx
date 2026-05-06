@@ -146,7 +146,7 @@ export default function Services() {
   return (
     <section id="services" className="px-6 md:px-16 max-w-screen-xl mx-auto py-24 md:py-36">
       <div className="mb-16">
-        <p className="small-caps-label mb-4">What We Do</p>
+        <p className="small-caps-label mb-4" style={{ color: 'hsl(214, 89%, 52%)' }}>What We Do</p>
         <h2
           className="font-inter font-black text-ink-black"
           style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)', lineHeight: 0.9, letterSpacing: '-0.04em' }}

@@ -25,7 +25,7 @@ export default function Contact() {
 
         {/* Section header */}
         <div className="mb-16">
-          <p className="small-caps-label mb-4">Get In Touch</p>
+          <p className="small-caps-label mb-4" style={{ color: 'hsl(214, 89%, 52%)' }}>Get In Touch</p>
           <h2
             className="font-inter font-black text-ink-black"
             style={{ fontSize: 'clamp(2.5rem, 7vw, 6rem)', lineHeight: 0.9, letterSpacing: '-0.04em' }}
@@ -46,8 +46,8 @@ export default function Contact() {
               <p className="small-caps-label mb-3">Direct Line</p>
               <a
                 href="tel:+19202553123"
-                className="font-inter font-black text-ink-black hover:text-tech-grey transition-colors block"
-                style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1, letterSpacing: '-0.04em' }}
+                className="font-inter font-black transition-colors block"
+                style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1, letterSpacing: '-0.04em', color: 'hsl(214, 89%, 52%)' }}
                 aria-label="Call 920 Detailing"
               >
                 (920) 255-3123
@@ -204,7 +204,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <button type="submit" className="btn-primary w-full justify-center" disabled={loading}>
+                <button type="submit" className="btn-primary w-full justify-center" disabled={loading} style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
                   {loading ? 'Sending…' : 'Submit Inquiry'}
                   {!loading && <ArrowRight size={16} />}
                 </button>
