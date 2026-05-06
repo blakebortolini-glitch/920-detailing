@@ -18,9 +18,17 @@ Deno.serve(async (req) => {
     const serviceLabel = serviceLabels[service] || service;
 
     // 1. Save booking to database
-    await base44.asServiceRole.entities.Booking.create({
+    const newBooking = await base44.asServiceRole.entities.Booking.create({
       name, phone, email, vehicle, year, service, date, time, notes, status: 'new'
     });
+
+    // 2. Send confirmation email to customer (if email provided)
+    if (email) {
+      await base44.asServiceRole.functions.invoke('sendConfirmation', {
+        bookingId: newBooking.id,
+        type: 'submitted',
+      });
+    }
 
     // 2. Send SMS via Twilio
     const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
