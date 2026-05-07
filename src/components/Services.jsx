@@ -158,6 +158,90 @@ export default function Services() {
         </p>
       </div>
 
+      {/* Pricing Table */}
+      <div className="mb-16 border-t border-l border-border">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-b border-r border-border" style={{ borderRight: 'none' }}>
+          {[
+            {
+              num: '01',
+              name: 'Interior Detail',
+              price: '$150',
+              duration: '3–6 hrs',
+              highlights: ['Deep vacuum & air purge', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning & protection'],
+            },
+            {
+              num: '02',
+              name: 'Interior + Exterior Bundle',
+              price: '$185',
+              duration: '6–10 hrs',
+              highlights: ['Full interior refresh', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
+              featured: true,
+            },
+            {
+              num: '03',
+              name: 'Exterior & Paint Correction',
+              price: '$200',
+              duration: '5–8 hrs',
+              highlights: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
+            },
+            {
+              num: '04',
+              name: 'Ceramic Coating',
+              price: '$600',
+              duration: '1–2 days',
+              highlights: ['Full paint correction incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '2–5 yr protection'],
+            },
+          ].map((pkg) => (
+            <div
+              key={pkg.num}
+              className="border-b border-r border-border flex flex-col"
+              style={{
+                background: pkg.featured ? '#0A0A0A' : '#FFFFFF',
+                ...(pkg.featured ? { outline: '2px solid hsl(214, 89%, 52%)', outlineOffset: '-2px', zIndex: 1, position: 'relative' } : {}),
+              }}
+            >
+              <div className="p-6 md:p-8 flex-1">
+                <div className="flex items-start justify-between mb-5">
+                  <span className="font-mono" style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#767676' }}>{pkg.num}</span>
+                  {pkg.featured && (
+                    <span className="font-mono border border-white/20 px-2 py-0.5 text-white" style={{ fontSize: '0.5rem', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                      Best Value
+                    </span>
+                  )}
+                </div>
+
+                <p className="small-caps-label mb-2" style={{ color: pkg.featured ? '#767676' : undefined }}>{pkg.name}</p>
+
+                <div className="mb-5">
+                  <span
+                    className="font-inter font-black"
+                    style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', lineHeight: 1, letterSpacing: '-0.04em', color: pkg.featured ? '#FFFFFF' : '#0A0A0A' }}
+                  >
+                    {pkg.price}
+                  </span>
+                  <span className="font-mono ml-2" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: 'hsl(214, 89%, 52%)' }}>STARTING AT</span>
+                  <p className="font-mono mt-1" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: pkg.featured ? '#555' : '#AAAAAA' }}>{pkg.duration}</p>
+                </div>
+
+                <div className="h-px mb-5" style={{ background: pkg.featured ? 'rgba(255,255,255,0.1)' : 'hsl(var(--border))' }} />
+
+                <ul className="space-y-2">
+                  {pkg.highlights.map((item, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="font-mono flex-shrink-0 mt-0.5" style={{ fontSize: '0.55rem', color: 'hsl(214, 89%, 52%)' }}>—</span>
+                      <span style={{ fontSize: '0.82rem', lineHeight: 1.5, color: pkg.featured ? 'rgba(255,255,255,0.75)' : '#444' }}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="font-mono text-tech-grey py-4 border-r border-border px-1" style={{ fontSize: '0.65rem', letterSpacing: '0.08em' }}>
+          * Final price varies by vehicle size and condition. Scroll down for full pricing details.
+        </p>
+      </div>
+
       <div>
         {services.map((s, i) => (
           <ServiceCard key={s.id} service={s} index={i} />
