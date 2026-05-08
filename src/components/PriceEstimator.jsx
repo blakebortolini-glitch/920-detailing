@@ -3,11 +3,11 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const vehicleTypes = [
-  { id: 'sedan', label: 'Sedan / Coupe', modifier: 1.0 },
-  { id: 'suv_small', label: 'Small SUV / Crossover', modifier: 1.15 },
-  { id: 'suv_large', label: 'Large SUV / Truck', modifier: 1.3 },
-  { id: 'van', label: 'Van / Minivan', modifier: 1.35 },
-  { id: 'sports', label: 'Sports / Exotic', modifier: 1.25 },
+  { id: 'sedan', label: 'Sedan / Coupe', upcharge: 0, upchargeLabel: null, quoteOnly: false },
+  { id: 'suv_small', label: 'Small SUV / Crossover', upcharge: 10, upchargeLabel: '+$10', quoteOnly: false },
+  { id: 'suv_large', label: 'Large SUV / Truck', upcharge: 20, upchargeLabel: '+$20', quoteOnly: false },
+  { id: 'van', label: 'Van / Minivan', upcharge: 35, upchargeLabel: '+$20–$50 depending on size', quoteOnly: false },
+  { id: 'sports', label: 'Sports / Exotic', upcharge: 0, upchargeLabel: 'Quote varies', quoteOnly: true },
 ];
 
 const services = [
@@ -51,9 +51,10 @@ export default function PriceEstimator() {
     const vehicle = vehicleTypes.find((v) => v.id === selectedVehicle);
     const service = services.find((s) => s.id === selectedService);
     if (!vehicle || !service) return null;
-    const low = Math.round(service.basePrice * vehicle.modifier / 5) * 5;
-    const high = Math.round(low * 1.3 / 5) * 5;
-    return { low, high, service, vehicle };
+    if (vehicle.quoteOnly) return { quoteOnly: true, service, vehicle };
+    const low = service.basePrice + vehicle.upcharge;
+    const high = Math.round(low * 1.25 / 5) * 5;
+    return { low, high, service, vehicle, quoteOnly: false };
   };
 
   const estimate = getEstimate();
@@ -95,12 +96,19 @@ export default function PriceEstimator() {
                       background: selectedVehicle === v.id ? '#0A0A0A' : '#FFFFFF',
                     }}
                   >
-                    <span
-                      className="font-inter font-semibold"
-                      style={{ fontSize: '0.9rem', color: selectedVehicle === v.id ? '#FFF' : '#0A0A0A' }}
-                    >
-                      {v.label}
-                    </span>
+                    <div className="flex items-center justify-between w-full">
+                      <span
+                        className="font-inter font-semibold"
+                        style={{ fontSize: '0.9rem', color: selectedVehicle === v.id ? '#FFF' : '#0A0A0A' }}
+                      >
+                        {v.label}
+                      </span>
+                      {v.upchargeLabel && (
+                        <span className="font-mono" style={{ fontSize: '0.6rem', letterSpacing: '0.1em', color: selectedVehicle === v.id ? 'rgba(255,255,255,0.65)' : 'hsl(214, 89%, 52%)' }}>
+                          {v.upchargeLabel}
+                        </span>
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -154,6 +162,20 @@ export default function PriceEstimator() {
                 <p className="text-tech-grey" style={{ fontSize: '0.9rem' }}>
                   Select a vehicle type and service package to see your instant estimate.
                 </p>
+              </div>
+            ) : estimate.quoteOnly ? (
+              <div className="border border-ink-black p-8 md:p-10">
+                <p className="small-caps-label text-tech-grey mb-6">Estimate for {estimate.vehicle.label}</p>
+                <p className="small-caps-label mb-2">{estimate.service.name}</p>
+                <p className="font-inter font-black text-ink-black mb-4" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1, letterSpacing: '-0.04em' }}>
+                  Custom Quote
+                </p>
+                <p className="text-tech-grey mb-8" style={{ fontSize: '0.9rem', lineHeight: 1.65 }}>
+                  Sports and exotic vehicles vary widely in panel complexity, paint type, and surface area. We provide a personalized quote after a quick consultation.
+                </p>
+                <Link to="/booking" className="btn-primary w-full justify-center" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
+                  Request a Quote <ArrowRight size={16} />
+                </Link>
               </div>
             ) : (
               <div className="border border-ink-black p-8 md:p-10">
