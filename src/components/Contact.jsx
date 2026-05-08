@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { ArrowRight, Phone } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { ArrowRight, Upload, X, ImageIcon } from 'lucide-react';
+import { base44 } from '@/api/base44Client';
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -7,14 +8,38 @@ export default function Contact() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [photos, setPhotos] = useState([]);
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingPhotos(true);
+    const uploaded = await Promise.all(
+      files.map(async (file) => {
+        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        return { name: file.name, url: file_url, preview: URL.createObjectURL(file) };
+      })
+    );
+    setPhotos((prev) => [...prev, ...uploaded]);
+    setUploadingPhotos(false);
+    e.target.value = '';
+  };
+
+  const removePhoto = (index) => setPhotos((prev) => prev.filter((_, i) => i !== index));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate a brief delay for UX
-    await new Promise((r) => setTimeout(r, 800));
+    const photoUrls = photos.map((p) => p.url);
+    await base44.integrations.Core.SendEmail({
+      to: '920detailing@gmail.com',
+      subject: `New Inquiry from ${form.name || 'a customer'}`,
+      body: `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nVehicle: ${form.year} ${form.vehicle}\nService: ${form.service}\nNotes: ${form.notes}\n\nAttached Photos:\n${photoUrls.join('\n') || 'None'}`,
+    });
     setLoading(false);
     setSubmitted(true);
   };
@@ -202,6 +227,57 @@ export default function Contact() {
                       />
                     </div>
                   </div>
+                </div>
+
+                {/* Group 4: Vehicle Photos */}
+                <div className="mb-10">
+                  <p className="small-caps-label mb-6 pb-2 border-b border-border">Vehicle Photos</p>
+                  <p className="text-tech-grey mb-4" style={{ fontSize: '0.85rem' }}>
+                    Attach photos of your vehicle's current condition for a more accurate quote.
+                  </p>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingPhotos}
+                    className="btn-outline w-full justify-center mb-4"
+                    style={{ padding: '14px 24px' }}
+                  >
+                    <Upload size={14} />
+                    {uploadingPhotos ? 'Uploading…' : 'Upload Photos'}
+                  </button>
+
+                  {photos.length > 0 && (
+                    <div className="grid grid-cols-3 gap-3">
+                      {photos.map((photo, i) => (
+                        <div key={i} className="relative border border-border group">
+                          <img
+                            src={photo.preview}
+                            alt={photo.name}
+                            className="w-full h-24 object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removePhoto(i)}
+                            className="absolute top-1 right-1 bg-ink-black text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{ minWidth: 24, minHeight: 24 }}
+                          >
+                            <X size={12} />
+                          </button>
+                          <p className="font-mono truncate px-1 py-0.5" style={{ fontSize: '0.55rem', color: '#767676' }}>{photo.name}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <button type="submit" className="btn-primary w-full justify-center" disabled={loading} style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
