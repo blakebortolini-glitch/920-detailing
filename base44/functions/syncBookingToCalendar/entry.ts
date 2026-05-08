@@ -49,9 +49,14 @@ Deno.serve(async (req) => {
     // Estimate end time based on service duration (hours)
     const durationHours = { interior: 4, exterior: 6, full: 8, ceramic: 10, unsure: 2 };
     const dur = durationHours[booking.service] || 4;
-    const startDate = new Date(`${startDateTime}-06:00`); // CST offset
-    const endDate = new Date(startDate.getTime() + dur * 60 * 60 * 1000);
-    const endDateTime = endDate.toISOString().slice(0, 19);
+    // Parse start hour/minute and compute end by adding duration
+    const [startHour, startMin] = time24.split(':').map(Number);
+    const totalStartMins = startHour * 60 + startMin;
+    const totalEndMins = totalStartMins + dur * 60;
+    const endHour = Math.floor(totalEndMins / 60) % 24;
+    const endMin = totalEndMins % 60;
+    const endTime24 = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
+    const endDateTime = `${dateStr}T${endTime24}:00`;
 
     const description = [
       `Customer: ${booking.name}`,
@@ -63,11 +68,11 @@ Deno.serve(async (req) => {
     ].filter(Boolean).join('\n');
 
     const event = {
-      summary: `${serviceLabel} — ${booking.name} (${vehicleStr})`,
+      summary: `${serviceLabel} - ${booking.name} (${vehicleStr})`,
       description,
-      start: { dateTime: `${startDateTime}-06:00`, timeZone: 'America/Chicago' },
-      end: { dateTime: `${endDateTime.slice(0, 16)}-06:00`, timeZone: 'America/Chicago' },
-      colorId: '2', // sage green
+      start: { dateTime: `${startDateTime}`, timeZone: 'America/Chicago' },
+      end: { dateTime: `${endDateTime}`, timeZone: 'America/Chicago' },
+      colorId: '2',
     };
 
     const calRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
