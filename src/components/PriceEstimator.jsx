@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const vehicleTypes = [
@@ -42,9 +42,20 @@ const services = [
   },
 ];
 
+const addOns = [
+  { id: 'pet_hair', name: 'Pet Hair Removal', priceLow: 25, priceHigh: 50, note: 'Depends on severity' },
+  { id: 'steam', name: 'Steam Cleaning', priceLow: 15, priceHigh: 15, note: 'Full interior sanitization' },
+  { id: 'stain', name: 'Stain Removal & Carpet Extraction', priceLow: 15, priceHigh: 50, note: 'Depends on stain severity' },
+  { id: 'odor', name: 'Odor Elimination', priceLow: 10, priceHigh: 40, note: 'Depends on odor severity' },
+];
+
 export default function PriceEstimator() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
+
+  const toggleAddOn = (id) =>
+    setSelectedAddOns((prev) => prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]);
 
   const getEstimate = () => {
     if (!selectedVehicle || !selectedService) return null;
@@ -52,9 +63,24 @@ export default function PriceEstimator() {
     const service = services.find((s) => s.id === selectedService);
     if (!vehicle || !service) return null;
     if (vehicle.quoteOnly) return { quoteOnly: true, service, vehicle };
-    const low = service.basePrice + vehicle.upcharge;
-    const high = Math.round(low * 1.25 / 5) * 5;
-    return { low, high, service, vehicle, quoteOnly: false };
+
+    const baseLow = service.basePrice + vehicle.upcharge;
+    const baseHigh = Math.round(baseLow * 1.25 / 5) * 5;
+
+    const activeAddOns = addOns.filter((a) => selectedAddOns.includes(a.id));
+    const addOnLow = activeAddOns.reduce((sum, a) => sum + a.priceLow, 0);
+    const addOnHigh = activeAddOns.reduce((sum, a) => sum + a.priceHigh, 0);
+
+    return {
+      low: baseLow + addOnLow,
+      high: baseHigh + addOnHigh,
+      baseLow,
+      baseHigh,
+      service,
+      vehicle,
+      activeAddOns,
+      quoteOnly: false,
+    };
   };
 
   const estimate = getEstimate();
@@ -73,7 +99,7 @@ export default function PriceEstimator() {
             PRICE<br />ESTIMATOR.
           </h2>
           <p className="mt-6 text-tech-grey max-w-xl" style={{ fontSize: '1rem' }}>
-            Select your vehicle type and desired service to get a ballpark estimate. Final pricing confirmed at booking.
+            Select your vehicle type, service, and any add-ons to get an instant estimate. Final pricing confirmed at booking.
           </p>
         </div>
 
@@ -97,10 +123,7 @@ export default function PriceEstimator() {
                     }}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span
-                        className="font-inter font-semibold"
-                        style={{ fontSize: '0.9rem', color: selectedVehicle === v.id ? '#FFF' : '#0A0A0A' }}
-                      >
+                      <span className="font-inter font-semibold" style={{ fontSize: '0.9rem', color: selectedVehicle === v.id ? '#FFF' : '#0A0A0A' }}>
                         {v.label}
                       </span>
                       {v.upchargeLabel && (
@@ -115,7 +138,7 @@ export default function PriceEstimator() {
             </div>
 
             {/* Service */}
-            <div>
+            <div className="mb-10">
               <p className="small-caps-label mb-5 pb-2 border-b border-border">Step 2 — Service Package</p>
               <div className="space-y-2">
                 {services.map((s) => (
@@ -132,16 +155,10 @@ export default function PriceEstimator() {
                     }}
                   >
                     <div className="flex items-center justify-between">
-                      <span
-                        className="font-inter font-semibold"
-                        style={{ fontSize: '0.9rem', color: selectedService === s.id ? '#FFF' : '#0A0A0A' }}
-                      >
+                      <span className="font-inter font-semibold" style={{ fontSize: '0.9rem', color: selectedService === s.id ? '#FFF' : '#0A0A0A' }}>
                         {s.name}
                       </span>
-                      <span
-                        className="font-mono"
-                        style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: selectedService === s.id ? 'rgba(255,255,255,0.7)' : 'hsl(214, 89%, 52%)' }}
-                      >
+                      <span className="font-mono" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: selectedService === s.id ? 'rgba(255,255,255,0.7)' : 'hsl(214, 89%, 52%)' }}>
                         FROM ${s.basePrice}
                       </span>
                     </div>
@@ -150,6 +167,47 @@ export default function PriceEstimator() {
                     )}
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Add-Ons */}
+            <div>
+              <p className="small-caps-label mb-5 pb-2 border-b border-border">Step 3 — Customize Your Detail</p>
+              <p className="text-tech-grey mb-4" style={{ fontSize: '0.82rem' }}>Optional add-ons. Can be added to any service.</p>
+              <div className="space-y-2">
+                {addOns.map((a) => {
+                  const active = selectedAddOns.includes(a.id);
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => toggleAddOn(a.id)}
+                      className="w-full text-left px-5 py-4 border transition-all flex items-center gap-4"
+                      style={{
+                        borderColor: active ? '#0A0A0A' : 'hsl(var(--border))',
+                        background: active ? '#0A0A0A' : '#FFFFFF',
+                      }}
+                    >
+                      <div
+                        className="flex-shrink-0 w-5 h-5 border flex items-center justify-center transition-all"
+                        style={{ borderColor: active ? '#FFF' : 'hsl(var(--border))', background: active ? 'hsl(214, 89%, 52%)' : 'transparent' }}
+                      >
+                        {active && <Check size={11} color="#FFF" strokeWidth={3} />}
+                      </div>
+                      <div className="flex-1">
+                        <span className="font-inter font-semibold" style={{ fontSize: '0.88rem', color: active ? '#FFF' : '#0A0A0A' }}>
+                          {a.name}
+                        </span>
+                        <span className="block font-mono" style={{ fontSize: '0.6rem', letterSpacing: '0.08em', color: active ? 'rgba(255,255,255,0.5)' : '#AAAAAA', marginTop: 2 }}>
+                          {a.note}
+                        </span>
+                      </div>
+                      <span className="font-mono flex-shrink-0" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: active ? 'rgba(255,255,255,0.7)' : 'hsl(214, 89%, 52%)' }}>
+                        {a.priceLow === a.priceHigh ? `+$${a.priceLow}` : `+$${a.priceLow}–$${a.priceHigh}`}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -181,13 +239,11 @@ export default function PriceEstimator() {
               <div className="border border-ink-black p-8 md:p-10">
                 <p className="small-caps-label text-tech-grey mb-6">Estimate for {estimate.vehicle.label}</p>
 
+                {/* Price */}
                 <div className="mb-6">
                   <p className="small-caps-label mb-1">{estimate.service.name}</p>
                   <div className="flex items-end gap-3 mt-3">
-                    <span
-                      className="font-inter font-black text-ink-black"
-                      style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', lineHeight: 1, letterSpacing: '-0.05em' }}
-                    >
+                    <span className="font-inter font-black text-ink-black" style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', lineHeight: 1, letterSpacing: '-0.05em' }}>
                       ${estimate.low}
                     </span>
                     <span className="font-inter font-black text-tech-grey mb-1" style={{ fontSize: 'clamp(1.5rem, 4vw, 2.5rem)', letterSpacing: '-0.03em' }}>
@@ -201,8 +257,36 @@ export default function PriceEstimator() {
 
                 <div className="h-px bg-border mb-6" />
 
+                {/* Price Breakdown */}
+                <p className="small-caps-label mb-3">Price Breakdown</p>
+                <div className="space-y-2 mb-2">
+                  <div className="flex justify-between">
+                    <span style={{ fontSize: '0.85rem', color: '#444' }}>{estimate.service.name}</span>
+                    <span className="font-mono" style={{ fontSize: '0.75rem', color: '#444' }}>${estimate.baseLow}–${estimate.baseHigh}</span>
+                  </div>
+                  {estimate.vehicle.upcharge > 0 && (
+                    <div className="flex justify-between">
+                      <span style={{ fontSize: '0.85rem', color: '#444' }}>{estimate.vehicle.label} upcharge</span>
+                      <span className="font-mono" style={{ fontSize: '0.75rem', color: '#444' }}>+${estimate.vehicle.upcharge}</span>
+                    </div>
+                  )}
+                  {estimate.activeAddOns.map((a) => (
+                    <div key={a.id} className="flex justify-between">
+                      <span style={{ fontSize: '0.85rem', color: '#444' }}>{a.name}</span>
+                      <span className="font-mono" style={{ fontSize: '0.75rem', color: 'hsl(214, 89%, 52%)' }}>
+                        {a.priceLow === a.priceHigh ? `+$${a.priceLow}` : `+$${a.priceLow}–$${a.priceHigh}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-between py-3 border-t border-border mb-6">
+                  <span className="font-inter font-bold text-ink-black" style={{ fontSize: '0.9rem' }}>Total Estimate</span>
+                  <span className="font-inter font-black text-ink-black" style={{ fontSize: '0.9rem' }}>${estimate.low}–${estimate.high}</span>
+                </div>
+
+                {/* What's Included */}
                 <p className="small-caps-label mb-3">What's Included</p>
-                <ul className="space-y-2 mb-8">
+                <ul className="space-y-2 mb-6">
                   {estimate.service.includes.map((item, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <span className="font-mono flex-shrink-0" style={{ fontSize: '0.55rem', marginTop: 3, color: 'hsl(214, 89%, 52%)' }}>—</span>
