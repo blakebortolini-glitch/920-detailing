@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     let subject, body;
 
     if (type === 'submitted') {
-      subject = `We received your request — 920 Detailing`;
+      subject = `We received your request - 920 Detailing`;
       body = `Hi ${booking.name},
 
 Thanks for reaching out to 920 Detailing! We've received your booking request and will get back to you within 24 hours to confirm your appointment.
@@ -51,7 +51,7 @@ If you need to reach us sooner, call or text: (920) 255-3123
 — 920 Detailing
 Kewaunee, Wisconsin`;
     } else if (type === 'confirmed') {
-      subject = `Your appointment is confirmed — 920 Detailing`;
+      subject = `Your appointment is confirmed - 920 Detailing`;
       body = `Hi ${booking.name},
 
 Great news — your appointment with 920 Detailing has been confirmed!
