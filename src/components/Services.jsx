@@ -17,8 +17,8 @@ const services = [
       { step: 'Final Inspection', detail: 'White-glove check under LED lighting. Zero tolerance for missed spots.' },
     ],
     result: 'A cabin that smells, looks, and feels like new, chemically protected against future soiling.',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop&q=80',
-    imageAlt: 'Macro shot of clean leather interior stitching with pristine matte finish',
+    image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=900&auto=format&fit=crop&q=80',
+    imageAlt: 'Professional detailer vacuuming and cleaning car interior seats',
     specs: [{ label: 'Duration', value: '3–6 HRS' }, { label: 'Products', value: 'PH NEUTRAL' }],
   },
   {
