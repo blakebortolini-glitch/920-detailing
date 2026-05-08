@@ -47,7 +47,7 @@ const services = [
     name: 'Ceramic Coating',
     tagline: 'Nanotechnology surface protection',
     description:
-      'Ceramic coating is a liquid polymer that chemically bonds to your vehicle\'s paint, creating a permanent (or semi-permanent) hydrophobic layer of protection. Unlike wax or sealant, it does not wash off. It hardens on top of your paint to protect it from UV rays, chemical stains, light scratches, and environmental contaminants. The result is a surface that is dramatically easier to maintain and stays cleaner for longer. This is only applied after paint correction — applying coating over defects locks them in permanently.',
+      'Ceramic coating is a liquid polymer that chemically bonds to your vehicle\'s paint, creating a permanent (or semi-permanent) hydrophobic layer of protection. Unlike wax or sealant, it does not wash off. It hardens on top of your paint to protect it from UV rays, chemical stains, light scratches, and environmental contaminants. We offer two tiers: a 3-year coating starting at $600, and a premium 8-year coating starting at $900. Both are only applied after full paint correction — coating over defects locks them in permanently.\n\nCeramic Maintenance Detail ($150): Ceramic coating clients receive priority access to our maintenance detail service. This is a full interior + exterior detail using coating-safe, pH-neutral products, plus any add-ons you choose. Done periodically, it keeps your coating hydrophobic, glossy, and performing at its best for the full duration of its rated lifespan.',
     process: [
       { step: 'Full Paint Correction First', detail: 'Coating amplifies what is underneath. Defects must be removed prior.' },
       { step: 'IPA Panel Wipe', detail: 'Every panel wiped with isopropyl alcohol to remove all oils and polish residue.' },
@@ -55,11 +55,12 @@ const services = [
       { step: 'Flash Time Management', detail: 'Each panel allowed to flash before leveling to ensure even bonding across the surface.' },
       { step: 'Infrared Cure (Optional)', detail: 'IR lamps accelerate the curing process for stronger, faster bonding.' },
       { step: '24–48 Hour Cure Protocol', detail: 'Vehicle must remain dry and untouched during initial cure period.' },
+      { step: 'Ongoing Maintenance Details', detail: 'Ceramic clients get full interior + exterior maintenance details for $150 (+ add-ons) using coating-safe products to preserve hydrophobic performance.' },
     ],
-    result: '2–5 year protection depending on product tier. Hydrophobic, UV resistant, and self-cleaning properties.',
+    result: '3-year or 8-year protection depending on tier. Hydrophobic, UV resistant, and self-cleaning. Maintained with periodic $150 detail visits.',
     image: 'https://images.unsplash.com/photo-1617531653332-bd46c16f4d68?w=900&auto=format&fit=crop&q=80',
     imageAlt: 'Water beading in perfect spheres on a ceramic-coated dark car surface',
-    specs: [{ label: 'Curing Time', value: '24–48 HRS' }, { label: 'Protection', value: '2–5 YRS' }],
+    specs: [{ label: 'Curing Time', value: '24–48 HRS' }, { label: 'Protection', value: '3 OR 8 YRS' }],
   },
 ];
 
