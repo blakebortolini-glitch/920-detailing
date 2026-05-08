@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Car, User, CheckCircle } from 'lucide-react';
+import { ArrowRight, CalendarDays, Car, User, CheckCircle, Check, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import CalendarPicker from './CalendarPicker';
 
@@ -11,6 +11,13 @@ const services = [
   { value: 'unsure', label: 'Not Sure — Need a Quote', price: '' },
 ];
 
+const addOns = [
+  { id: 'pet_hair', name: 'Pet Hair Removal', price: '$25–$50', note: 'Depends on severity' },
+  { id: 'steam', name: 'Steam Cleaning', price: '$15', note: 'Full interior sanitization' },
+  { id: 'stain', name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Depends on stain severity' },
+  { id: 'odor', name: 'Odor Elimination', price: '$10–$40', note: 'Depends on odor severity' },
+];
+
 
 export default function BookingForm() {
   const [form, setForm] = useState({
@@ -19,9 +26,13 @@ export default function BookingForm() {
     service: '', date: '', time: '',
     notes: '',
   });
+  const [selectedAddOns, setSelectedAddOns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  const toggleAddOn = (id) =>
+    setSelectedAddOns((prev) => prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]);
 
   const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
   const setDirect = (field, val) => setForm((f) => ({ ...f, [field]: val }));
@@ -34,7 +45,8 @@ export default function BookingForm() {
       return;
     }
     setLoading(true);
-    const res = await base44.functions.invoke('sendBooking', form);
+    const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
+    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '' });
     setLoading(false);
     if (res.data?.success) {
       setSubmitted(true);
@@ -93,6 +105,50 @@ export default function BookingForm() {
               )}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Add-Ons */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
+          <Sparkles size={14} className="text-tech-grey" />
+          <p className="small-caps-label">Add-Ons</p>
+          <span className="font-mono text-tech-grey ml-auto" style={{ fontSize: '0.6rem', letterSpacing: '0.1em' }}>OPTIONAL</span>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {addOns.map((a) => {
+            const active = selectedAddOns.includes(a.id);
+            return (
+              <button
+                key={a.id}
+                type="button"
+                onClick={() => toggleAddOn(a.id)}
+                className="text-left p-4 border transition-colors flex items-start gap-3"
+                style={{
+                  borderColor: active ? '#0A0A0A' : 'hsl(var(--border))',
+                  background: active ? '#0A0A0A' : '#FFFFFF',
+                }}
+              >
+                <div
+                  className="flex-shrink-0 w-4 h-4 border flex items-center justify-center mt-0.5 transition-all"
+                  style={{ borderColor: active ? 'rgba(255,255,255,0.5)' : 'hsl(var(--border))', background: active ? 'hsl(214, 89%, 52%)' : 'transparent' }}
+                >
+                  {active && <Check size={10} color="#FFF" strokeWidth={3} />}
+                </div>
+                <div className="flex-1">
+                  <p className="font-inter font-semibold" style={{ fontSize: '0.88rem', color: active ? '#FFF' : '#0A0A0A' }}>
+                    {a.name}
+                  </p>
+                  <p className="font-mono mt-0.5" style={{ fontSize: '0.6rem', letterSpacing: '0.08em', color: active ? 'rgba(255,255,255,0.5)' : '#AAAAAA' }}>
+                    {a.note}
+                  </p>
+                </div>
+                <span className="font-mono flex-shrink-0" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: active ? 'rgba(255,255,255,0.6)' : 'hsl(214, 89%, 52%)' }}>
+                  {a.price}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
