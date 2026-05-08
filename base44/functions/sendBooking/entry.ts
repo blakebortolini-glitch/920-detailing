@@ -1,6 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const OWNER_PHONE = '+19202553123';
+const OWNER_EMAIL = 'contact@920detailing.com';
 
 Deno.serve(async (req) => {
   try {
@@ -82,6 +83,59 @@ Deno.serve(async (req) => {
         const err = await customerSmsRes.text();
         console.error('Twilio customer SMS error:', err);
       }
+    }
+
+    // 5. Send owner notification email via Gmail
+    try {
+      const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+
+      // Get authorized Gmail profile to use as sender/recipient
+      const profileRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const profile = await profileRes.json();
+      const ownerEmail = profile.emailAddress;
+
+      const emailSubject = `New Booking: ${name} — ${serviceLabel}`;
+      const emailBody = [
+        `New booking request received.\n`,
+        `Customer: ${name}`,
+        `Phone: ${phone}`,
+        email ? `Email: ${email}` : null,
+        `Vehicle: ${year ? year + ' ' : ''}${vehicle}${vehicleType ? ' (' + vehicleType + ')' : ''}`,
+        `Service: ${serviceLabel}`,
+        addOns ? `Add-ons: ${addOns}` : null,
+        `Date: ${date}${time ? ' @ ' + time : ''}`,
+        notes ? `Notes: ${notes}` : null,
+      ].filter(Boolean).join('\n');
+
+      const mimeMessage = [
+        `To: ${ownerEmail}`,
+        `Subject: ${emailSubject}`,
+        `Content-Type: text/plain; charset=utf-8`,
+        `MIME-Version: 1.0`,
+        ``,
+        emailBody,
+      ].join('\r\n');
+
+      const encoded = btoa(unescape(encodeURIComponent(mimeMessage)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+      const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ raw: encoded }),
+      });
+
+      if (!gmailRes.ok) {
+        const err = await gmailRes.text();
+        console.error('Gmail send error:', err);
+      }
+    } catch (emailErr) {
+      console.error('Gmail owner email error:', emailErr);
     }
 
     return Response.json({ success: true });
