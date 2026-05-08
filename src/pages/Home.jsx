@@ -8,6 +8,7 @@ import PriceEstimator from '../components/PriceEstimator';
 import Contact from '../components/Contact';
 import Reviews from '../components/Reviews';
 import Footer from '../components/Footer';
+import AdvisorChat from '../components/AdvisorChat';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <Reviews />
       <Contact />
       <Footer />
+      <AdvisorChat />
     </main>
   );
 }
