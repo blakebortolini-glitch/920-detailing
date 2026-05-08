@@ -190,7 +190,7 @@ export default function Services() {
               name: 'Ceramic Coating',
               price: '$600',
               duration: '1–2 days',
-              highlights: ['Full paint correction incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '2–5 yr protection'],
+              highlights: ['Full paint correction incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '3–8 yr protection'],
             },
           ].map((pkg) => (
             <div
