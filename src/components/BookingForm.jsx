@@ -11,6 +11,14 @@ const services = [
   { value: 'unsure', label: 'Not Sure — Need a Quote', price: '' },
 ];
 
+const vehicleTypes = [
+  { value: 'sedan', label: 'Sedan / Coupe', note: 'Standard upcharge' },
+  { value: 'suv_small', label: 'Small SUV / Crossover', note: '+$10' },
+  { value: 'suv_large', label: 'Large SUV / Truck', note: '+$20' },
+  { value: 'van', label: 'Van / Minivan', note: '+$20–$50' },
+  { value: 'sports', label: 'Sports / Exotic', note: 'Custom quote' },
+];
+
 const addOns = [
   { id: 'pet_hair', name: 'Pet Hair Removal', price: '$25–$50', note: 'Depends on severity' },
   { id: 'steam', name: 'Steam Cleaning', price: '$15', note: 'Full interior sanitization' },
@@ -22,7 +30,7 @@ const addOns = [
 export default function BookingForm() {
   const [form, setForm] = useState({
     name: '', phone: '', email: '',
-    vehicle: '', year: '',
+    vehicle: '', year: '', vehicleType: '',
     service: '', date: '', time: '',
     notes: '',
   });
@@ -46,7 +54,7 @@ export default function BookingForm() {
     }
     setLoading(true);
     const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
-    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '' });
+    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', vehicleType: form.vehicleType });
     setLoading(false);
     if (res.data?.success) {
       setSubmitted(true);
@@ -103,6 +111,35 @@ export default function BookingForm() {
                   {s.price}
                 </p>
               )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Vehicle Type */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
+          <Car size={14} className="text-tech-grey" />
+          <p className="small-caps-label">Vehicle Type</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {vehicleTypes.map((v) => (
+            <button
+              key={v.value}
+              type="button"
+              onClick={() => setDirect('vehicleType', v.value)}
+              className="text-left p-4 border transition-colors"
+              style={{
+                borderColor: form.vehicleType === v.value ? '#0A0A0A' : 'hsl(var(--border))',
+                background: form.vehicleType === v.value ? '#0A0A0A' : '#FFFFFF',
+              }}
+            >
+              <p className="font-inter font-semibold" style={{ fontSize: '0.88rem', color: form.vehicleType === v.value ? '#FFF' : '#0A0A0A' }}>
+                {v.label}
+              </p>
+              <p className="font-mono mt-1" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: form.vehicleType === v.value ? 'rgba(255,255,255,0.5)' : 'hsl(214, 89%, 52%)' }}>
+                {v.note}
+              </p>
             </button>
           ))}
         </div>

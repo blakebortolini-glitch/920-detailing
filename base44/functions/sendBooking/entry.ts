@@ -6,7 +6,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    const { name, phone, email, vehicle, year, service, date, time, notes, addOns } = body;
+    const { name, phone, email, vehicle, year, vehicleType, service, date, time, notes, addOns } = body;
 
     const serviceLabels = {
       interior: 'Interior Detailing',
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
     const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
     const fromPhone = Deno.env.get('TWILIO_PHONE_NUMBER');
 
-    const smsBody = `📅 New Booking!\n${name} | ${phone}\n${year ? year + ' ' : ''}${vehicle}\n${serviceLabel}${addOns ? '\nAdd-ons: ' + addOns : ''}\n${date} @ ${time}${notes ? '\nNotes: ' + notes : ''}`;
+    const smsBody = `📅 New Booking!\n${name} | ${phone}\n${year ? year + ' ' : ''}${vehicle}${vehicleType ? ' (' + vehicleType + ')' : ''}\n${serviceLabel}${addOns ? '\nAdd-ons: ' + addOns : ''}\n${date} @ ${time}${notes ? '\nNotes: ' + notes : ''}`;
 
     const twilioRes = await fetch(
       `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
