@@ -1,0 +1,39 @@
+{
+  "name": "VehicleType",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name, e.g. Sedan / Coupe"
+    },
+    "value": {
+      "type": "string",
+      "description": "Internal key, e.g. sedan, suv_small, suv_large, van, sports"
+    },
+    "upcharge": {
+      "type": "number",
+      "description": "Additional cost in dollars added on top of base service price. 0 for standard."
+    },
+    "upcharge_label": {
+      "type": "string",
+      "description": "Human-readable upcharge label, e.g. +$20 or Custom quote"
+    },
+    "quote_only": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, pricing requires a custom quote rather than a fixed upcharge"
+    },
+    "note": {
+      "type": "string",
+      "description": "Additional notes about this vehicle type for the agent or UI"
+    },
+    "sort_order": {
+      "type": "number",
+      "description": "Display order"
+    }
+  },
+  "required": [
+    "name",
+    "value"
+  ]
+}
