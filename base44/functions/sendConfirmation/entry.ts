@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
     let bookingId, type;
     if (payload.event) {
       bookingId = payload.event.entity_id;
-      type = 'confirmed';
+      type = payload.data?.status === 'cancelled' ? 'cancelled' : 'confirmed';
     } else {
       bookingId = payload.bookingId;
       type = payload.type;
@@ -65,6 +65,22 @@ Please arrive at the scheduled time. If anything comes up, call or text us at (9
 
 See you soon,
 — 920 Detailing
+Kewaunee, Wisconsin`;
+    } else if (type === 'cancelled') {
+      subject = `Your appointment has been cancelled - 920 Detailing`;
+      body = `Hi ${booking.name},
+
+We're sorry to let you know that your upcoming appointment with 920 Detailing has been cancelled.
+
+  Vehicle:    ${vehicleStr}
+  Service:    ${serviceLabel}
+  Date:       ${booking.date}
+  Time:       ${booking.time}
+
+If you'd like to reschedule or have any questions, please call or text us at (920) 255-3123 and we'd be happy to get you set up.
+
+Sorry for any inconvenience,
+- 920 Detailing
 Kewaunee, Wisconsin`;
     } else {
       return Response.json({ success: false, reason: 'Unknown type' });
