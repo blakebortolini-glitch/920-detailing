@@ -40,6 +40,25 @@ Deno.serve(async (req) => {
       const email = emailMatch?.[1]?.trim();
       const name = nameMatch?.[1]?.trim() || 'there';
 
+      // Update booking status based on calendar event status
+      // Match booking by phone number stored in description
+      if (phone) {
+        const bookings = await base44.asServiceRole.entities.Booking.filter({ phone });
+        const booking = bookings?.[0];
+        if (booking) {
+          let newStatus = null;
+          if (event.status === 'cancelled') {
+            newStatus = 'cancelled';
+          } else if (event.status === 'confirmed' && booking.status === 'new') {
+            newStatus = 'confirmed';
+          }
+          if (newStatus && booking.status !== newStatus) {
+            await base44.asServiceRole.entities.Booking.update(booking.id, { status: newStatus });
+            console.log(`Booking ${booking.id} status updated to ${newStatus}`);
+          }
+        }
+      }
+
       const startTime = event.start?.dateTime || event.start?.date || '';
       const startDate = startTime ? new Date(startTime) : null;
       const formattedDate = startDate
