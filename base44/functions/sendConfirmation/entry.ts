@@ -70,12 +70,33 @@ Kewaunee, Wisconsin`;
       return Response.json({ success: false, reason: 'Unknown type' });
     }
 
-    await base44.asServiceRole.integrations.Core.SendEmail({
-      to: booking.email,
-      from_name: '920 Detailing',
-      subject,
+    const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
+
+    const mimeMessage = [
+      `To: ${booking.email}`,
+      `Subject: ${subject}`,
+      `Content-Type: text/plain; charset=utf-8`,
+      `MIME-Version: 1.0`,
+      ``,
       body,
+    ].join('\r\n');
+
+    const encoded = btoa(unescape(encodeURIComponent(mimeMessage)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ raw: encoded }),
     });
+
+    if (!gmailRes.ok) {
+      const err = await gmailRes.text();
+      console.error('Gmail send error:', err);
+    }
 
     return Response.json({ success: true });
   } catch (error) {
