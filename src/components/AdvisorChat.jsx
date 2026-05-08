@@ -54,7 +54,7 @@ export default function AdvisorChat() {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -143,9 +143,9 @@ export default function AdvisorChat() {
           </div>
 
           {/* Input */}
-          <div className="flex-shrink-0 border-t border-border flex items-center px-4 py-3 gap-3">
+          <div className="flex-shrink-0 border-t border-border flex items-start px-4 py-3 gap-3">
             <textarea
-              rows={1}
+              rows={3}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
