@@ -145,7 +145,7 @@ export default function AdvisorChat() {
           {/* Input */}
           <div className="flex-shrink-0 border-t border-border flex items-start px-4 py-3 gap-3">
             <textarea
-              rows={3}
+              rows={5}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
