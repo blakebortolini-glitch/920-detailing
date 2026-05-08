@@ -14,7 +14,7 @@ const services = [
       { step: 'Surface Decontamination', detail: 'All hard surfaces wiped, scrubbed, and cleaned with appropriate solvents.' },
       { step: 'Glass Polish & Clarity', detail: 'Interior glass polished with a non-smearing glass cleaner for zero haze.' },
       { step: 'Conditioning & Protection', detail: 'Leather conditioned; plastics and vinyl protected against UV degradation.' },
-      { step: 'Final Inspection', detail: 'White-glove check under LED lighting. Zero tolerance for missed spots.' },
+
     ],
     result: 'A cabin that smells, looks, and feels like new, chemically protected against future soiling.',
     image: 'https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=900&auto=format&fit=crop&q=80',
