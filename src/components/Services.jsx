@@ -53,7 +53,7 @@ const services = [
       { step: 'IPA Panel Wipe', detail: 'Every panel wiped with isopropyl alcohol to remove all oils and polish residue.' },
       { step: 'Coating Application', detail: 'Applied panel-by-panel using an applicator block and suede cloth in a cross-hatch pattern.' },
       { step: 'Flash Time Management', detail: 'Each panel allowed to flash before leveling to ensure even bonding across the surface.' },
-      { step: 'Infrared Cure (Optional)', detail: 'IR lamps accelerate the curing process for stronger, faster bonding.' },
+
       { step: '24–48 Hour Cure Protocol', detail: 'Vehicle must remain dry and untouched during initial cure period.' },
       { step: 'Ongoing Maintenance Details', detail: 'Ceramic clients get full interior + exterior maintenance details for $150 (+ add-ons) using coating-safe products to preserve hydrophobic performance.' },
     ],
