@@ -82,6 +82,35 @@ export default function BookingForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="max-w-2xl mx-auto">
 
+      {/* Vehicle Type */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
+          <Car size={14} className="text-tech-grey" />
+          <p className="small-caps-label">Vehicle Type</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {vehicleTypes.map((v) => (
+            <button
+              key={v.value}
+              type="button"
+              onClick={() => setDirect('vehicleType', v.value)}
+              className="text-left p-4 border transition-colors"
+              style={{
+                borderColor: form.vehicleType === v.value ? '#0A0A0A' : 'hsl(var(--border))',
+                background: form.vehicleType === v.value ? '#0A0A0A' : '#FFFFFF',
+              }}
+            >
+              <p className="font-inter font-semibold" style={{ fontSize: '0.88rem', color: form.vehicleType === v.value ? '#FFF' : '#0A0A0A' }}>
+                {v.label}
+              </p>
+              <p className="font-mono mt-1" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: form.vehicleType === v.value ? 'rgba(255,255,255,0.5)' : 'hsl(214, 89%, 52%)' }}>
+                {v.note}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Service Selection */}
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
@@ -111,35 +140,6 @@ export default function BookingForm() {
                   {s.price}
                 </p>
               )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Vehicle Type */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
-          <Car size={14} className="text-tech-grey" />
-          <p className="small-caps-label">Vehicle Type</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {vehicleTypes.map((v) => (
-            <button
-              key={v.value}
-              type="button"
-              onClick={() => setDirect('vehicleType', v.value)}
-              className="text-left p-4 border transition-colors"
-              style={{
-                borderColor: form.vehicleType === v.value ? '#0A0A0A' : 'hsl(var(--border))',
-                background: form.vehicleType === v.value ? '#0A0A0A' : '#FFFFFF',
-              }}
-            >
-              <p className="font-inter font-semibold" style={{ fontSize: '0.88rem', color: form.vehicleType === v.value ? '#FFF' : '#0A0A0A' }}>
-                {v.label}
-              </p>
-              <p className="font-mono mt-1" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: form.vehicleType === v.value ? 'rgba(255,255,255,0.5)' : 'hsl(214, 89%, 52%)' }}>
-                {v.note}
-              </p>
             </button>
           ))}
         </div>
