@@ -49,6 +49,9 @@ export default function Navbar() {
               {s}
             </button>
           ))}
+          <Link to="/my-bookings" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
+            my bookings
+          </Link>
           <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem', background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
             Book Now
           </Link>
@@ -80,6 +83,9 @@ export default function Navbar() {
               {s}
             </button>
           ))}
+          <Link to="/my-bookings" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
+            my bookings
+          </Link>
           <Link to="/booking" className="btn-primary w-full justify-center" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }} onClick={() => setMenuOpen(false)}>
             Book Now
           </Link>
