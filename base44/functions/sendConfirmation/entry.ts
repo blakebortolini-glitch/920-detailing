@@ -84,6 +84,22 @@ If you'd like to reschedule or have any questions, please call or text us at (92
 Sorry for any inconvenience,
 - 920 Detailing
 Kewaunee, Wisconsin`;
+    } else if (type === 'reminder') {
+      subject = `Reminder: Your appointment is tomorrow - 920 Detailing`;
+      body = `Hi ${booking.name},
+
+This is a friendly reminder that your 920 Detailing appointment is TOMORROW!
+
+  Vehicle:    ${vehicleStr}
+  Service:    ${serviceLabel}
+  Date:       ${booking.date}
+  Time:       ${booking.time}
+
+If anything comes up, call or text us at (920) 255-3123 and we'll work something out.
+
+See you tomorrow,
+— 920 Detailing
+Kewaunee, Wisconsin`;
     } else {
       return Response.json({ success: false, reason: 'Unknown type' });
     }
