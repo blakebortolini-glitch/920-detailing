@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       type = payload.type;
     }
 
-    const OWNER_EMAIL = '920detailingwi@gmail.com';
+    const OWNER_EMAIL = Deno.env.get('OWNER_EMAIL');
 
     const booking = await base44.asServiceRole.entities.Booking.get(bookingId);
     if (!booking) {

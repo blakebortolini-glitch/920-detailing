@@ -1,7 +1,7 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
-const OWNER_PHONE = '+19202553123';
-const OWNER_EMAIL = 'contact@920detailing.com';
+const OWNER_PHONE = Deno.env.get('OWNER_PHONE');
+const OWNER_EMAIL = Deno.env.get('OWNER_EMAIL');
 
 Deno.serve(async (req) => {
   try {

@@ -36,7 +36,7 @@ export default function Contact() {
     setLoading(true);
     const photoUrls = photos.map((p) => p.url);
     await base44.integrations.Core.SendEmail({
-      to: '920detailing@gmail.com',
+      to: import.meta.env.VITE_OWNER_EMAIL || '920detailing@gmail.com',
       subject: `New Inquiry from ${form.name || 'a customer'}`,
       body: `Name: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nVehicle: ${form.year} ${form.vehicle}\nService: ${form.service}\nNotes: ${form.notes}\n\nAttached Photos:\n${photoUrls.join('\n') || 'None'}`,
     });
