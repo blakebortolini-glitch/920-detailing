@@ -23,9 +23,11 @@ Deno.serve(async (req) => {
       type = payload.type;
     }
 
+    const OWNER_EMAIL = '920detailingwi@gmail.com';
+
     const booking = await base44.asServiceRole.entities.Booking.get(bookingId);
-    if (!booking || !booking.email) {
-      return Response.json({ success: false, reason: 'No email on booking' });
+    if (!booking) {
+      return Response.json({ success: false, reason: 'Booking not found' });
     }
 
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
@@ -88,30 +90,70 @@ Kewaunee, Wisconsin`;
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 
-    const mimeMessage = [
-      `To: ${booking.email}`,
-      `Subject: ${subject}`,
-      `Content-Type: text/plain; charset=utf-8`,
-      `MIME-Version: 1.0`,
-      ``,
-      body,
-    ].join('\r\n');
+    const sendEmail = async (to, emailSubject, emailBody) => {
+      const mime = [
+        `To: ${to}`,
+        `Subject: ${emailSubject}`,
+        `Content-Type: text/plain; charset=utf-8`,
+        `MIME-Version: 1.0`,
+        ``,
+        emailBody,
+      ].join('\r\n');
+      const encoded = btoa(unescape(encodeURIComponent(mime)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw: encoded }),
+      });
+      if (!res.ok) console.error(`Gmail send error to ${to}:`, await res.text());
+    };
 
-    const encoded = btoa(unescape(encodeURIComponent(mimeMessage)))
-      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    // Send customer email (only if they have an email)
+    if (booking.email) {
+      await sendEmail(booking.email, subject, body);
+    }
 
-    const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ raw: encoded }),
-    });
+    // Send owner notification
+    let ownerSubject, ownerBody;
+    if (type === 'submitted') {
+      ownerSubject = `NEW booking request — ${booking.name} (${vehicleStr})`;
+      ownerBody = `A new booking request needs your confirmation.
 
-    if (!gmailRes.ok) {
-      const err = await gmailRes.text();
-      console.error('Gmail send error:', err);
+  Customer:   ${booking.name}
+  Phone:      ${booking.phone}
+${booking.email ? `  Email:      ${booking.email}\n` : ''}  Vehicle:    ${vehicleStr}
+  Service:    ${serviceLabel}
+  Date:       ${booking.date}
+  Time:       ${booking.time}
+${booking.notes ? `  Notes:      ${booking.notes}\n` : ''}
+Log in to the admin panel to confirm or cancel this booking.`;
+    } else if (type === 'confirmed') {
+      ownerSubject = `Booking CONFIRMED — ${booking.name} (${vehicleStr})`;
+      ownerBody = `You have confirmed the following appointment:
+
+  Customer:   ${booking.name}
+  Phone:      ${booking.phone}
+${booking.email ? `  Email:      ${booking.email}\n` : ''}  Vehicle:    ${vehicleStr}
+  Service:    ${serviceLabel}
+  Date:       ${booking.date}
+  Time:       ${booking.time}
+${booking.notes ? `  Notes:      ${booking.notes}\n` : ''}
+A confirmation email has been sent to the customer.`;
+    } else if (type === 'cancelled') {
+      ownerSubject = `Booking CANCELLED — ${booking.name} (${vehicleStr})`;
+      ownerBody = `The following booking has been cancelled:
+
+  Customer:   ${booking.name}
+  Phone:      ${booking.phone}
+  Vehicle:    ${vehicleStr}
+  Service:    ${serviceLabel}
+  Date:       ${booking.date}
+  Time:       ${booking.time}`;
+    }
+
+    if (ownerSubject) {
+      await sendEmail(OWNER_EMAIL, ownerSubject, ownerBody);
     }
 
     return Response.json({ success: true });
