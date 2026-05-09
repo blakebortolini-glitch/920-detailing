@@ -1,29 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import {
   format, startOfMonth, endOfMonth, startOfWeek, endOfWeek,
   addMonths, subMonths, addDays, isBefore, isSameDay, isSameMonth,
 } from 'date-fns';
-
+import { base44 } from '@/api/base44Client';
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 
-// Fully booked dates (yyyy-MM-dd)
-const BOOKED_DATES = new Set([
-  '2026-05-09', '2026-05-16', '2026-05-17', '2026-05-23', '2026-05-24',
-]);
-
-// May 2026: only Sat/Sun open; all other months: Mon–Sat open, Sun closed
-const isDisabled = (date) => {
-  if (isBefore(date, today)) return true;
-  if (BOOKED_DATES.has(format(date, 'yyyy-MM-dd'))) return true;
-  const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4;
-  if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6;
-  return date.getDay() === 0;
-};
-
 export default function CalendarPicker({ selectedDate, onDateChange }) {
+  const [bookedDates, setBookedDates] = useState(new Set());
+
+  useEffect(() => {
+    base44.entities.Booking.filter({ status: 'confirmed' }).then((bookings) => {
+      const dates = new Set(bookings.map((b) => b.date));
+      setBookedDates(dates);
+    });
+  }, []);
+
+  // May 2026: only Sat/Sun open; all other months: Mon–Sat open, Sun closed
+  const isDisabled = (date) => {
+    if (isBefore(date, today)) return true;
+    if (bookedDates.has(format(date, 'yyyy-MM-dd'))) return true;
+    const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4;
+    if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6;
+    return date.getDay() === 0;
+  };
   const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate) : new Date());
 
   const monthStart = startOfMonth(viewMonth);
