@@ -12,9 +12,13 @@ today.setHours(0, 0, 0, 0);
 export default function CalendarPicker({ selectedDate, onDateChange }) {
   const [bookedDates, setBookedDates] = useState(new Set());
 
+  const MANUALLY_BLOCKED = new Set([
+    '2026-05-09', '2026-05-10', '2026-05-16', '2026-05-17', '2026-05-23', '2026-05-24',
+  ]);
+
   useEffect(() => {
     base44.entities.Booking.filter({ status: 'confirmed' }).then((bookings) => {
-      const dates = new Set(bookings.map((b) => b.date));
+      const dates = new Set([...MANUALLY_BLOCKED, ...bookings.map((b) => b.date)]);
       setBookedDates(dates);
     });
   }, []);
