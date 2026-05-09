@@ -22,10 +22,35 @@ Deno.serve(async (req) => {
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
 
+    // --- CANCELLATION: delete calendar events and free up the slot ---
+    if (booking.status === 'cancelled') {
+      const deleteEvent = async (eventId) => {
+        if (!eventId) return;
+        const res = await fetch(
+          `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+          {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${accessToken}` },
+          }
+        );
+        if (!res.ok && res.status !== 404) {
+          console.error(`Failed to delete calendar event ${eventId}:`, await res.text());
+        }
+      };
+
+      await Promise.all([
+        deleteEvent(booking.calendarEventId),
+        deleteEvent(booking.calendarBlockEventId),
+      ]);
+
+      return Response.json({ success: true, action: 'deleted' });
+    }
+
+    // --- CREATION: add events to Google Calendar ---
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
 
-    const dateStr = booking.date; // e.g. "2026-05-15"
+    const dateStr = booking.date;
     const timeStr = booking.time || '09:00';
 
     const parseTime = (t) => {
@@ -95,7 +120,7 @@ Deno.serve(async (req) => {
       description: `This day is fully booked. Appointment: ${serviceLabel} for ${booking.name}.`,
       start: { date: dateStr },
       end: { date: dateStr },
-      colorId: '11', // red
+      colorId: '11',
       transparency: 'opaque',
     };
 
@@ -108,10 +133,19 @@ Deno.serve(async (req) => {
       body: JSON.stringify(blockEvent),
     });
 
-    if (!blockRes.ok) {
-      const err = await blockRes.text();
-      console.error('Google Calendar block event error:', err);
+    let blockEventId = null;
+    if (blockRes.ok) {
+      const blockCreated = await blockRes.json();
+      blockEventId = blockCreated.id;
+    } else {
+      console.error('Google Calendar block event error:', await blockRes.text());
     }
+
+    // 3. Save event IDs back to the booking for future cancellation
+    await base44.asServiceRole.entities.Booking.update(bookingId, {
+      calendarEventId: created.id,
+      ...(blockEventId ? { calendarBlockEventId: blockEventId } : {}),
+    });
 
     return Response.json({ success: true, eventId: created.id });
   } catch (error) {

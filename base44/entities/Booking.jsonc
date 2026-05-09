@@ -56,6 +56,14 @@
       ],
       "default": "new",
       "description": "Booking status"
+    },
+    "calendarEventId": {
+      "type": "string",
+      "description": "Google Calendar event ID for this booking"
+    },
+    "calendarBlockEventId": {
+      "type": "string",
+      "description": "Google Calendar block event ID (all-day booked marker) for this booking"
     }
   },
   "required": [
