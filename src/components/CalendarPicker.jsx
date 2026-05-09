@@ -19,12 +19,16 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
     });
   }, []);
 
-  // May 2026: only Sat/Sun open; all other months: Mon–Sat open, Sun closed
+  // May 2026: only Sat/Sun open; Jun–Aug 2026: Mon–Sun open; all other months: Mon–Sat open, Sun closed
   const isDisabled = (date) => {
     if (isBefore(date, today)) return true;
     if (bookedDates.has(format(date, 'yyyy-MM-dd'))) return true;
-    const isMay2026 = date.getFullYear() === 2026 && date.getMonth() === 4;
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const isMay2026 = year === 2026 && month === 4;
+    const isJunToAug2026 = year === 2026 && month >= 5 && month <= 7;
     if (isMay2026) return date.getDay() !== 0 && date.getDay() !== 6;
+    if (isJunToAug2026) return false; // all days open
     return date.getDay() === 0;
   };
   const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate) : new Date());
