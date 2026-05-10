@@ -58,7 +58,7 @@ const services = [
       { step: 'Ongoing Maintenance Details', detail: 'Ceramic clients get full interior + exterior maintenance details for $150 (+ add-ons) using coating-safe products to preserve hydrophobic performance.' },
     ],
     result: '3-year or 8-year protection depending on tier. Hydrophobic, UV resistant, and self-cleaning. Maintained with periodic $150 detail visits.',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&auto=format&fit=crop&q=80',
     imageAlt: 'Water beading in perfect spheres on a ceramic-coated dark car surface',
     specs: [{ label: 'Curing Time', value: '24–48 HRS' }, { label: 'Protection', value: '3 OR 8 YRS' }],
   },
