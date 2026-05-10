@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { ArrowRight, Upload, X, ImageIcon } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -11,6 +12,7 @@ export default function Contact() {
   const [photos, setPhotos] = useState([]);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
   const fileInputRef = useRef(null);
+  const { getToken } = useRecaptcha();
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -35,9 +37,11 @@ export default function Contact() {
     e.preventDefault();
     setLoading(true);
     const photoUrls = photos.map((p) => p.url);
+    const recaptchaToken = await getToken('inquiry').catch(() => null);
     await base44.functions.invoke('sendInquiry', {
       ...form,
       photoUrls,
+      recaptchaToken,
     });
     setLoading(false);
     setSubmitted(true);

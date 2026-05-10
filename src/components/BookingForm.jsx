@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight, CalendarDays, Car, User, CheckCircle, Check, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import CalendarPicker from './CalendarPicker';
+import { useRecaptcha } from '@/hooks/useRecaptcha';
 
 const services = [
   { value: 'interior', label: 'Interior Detailing', price: 'From $150' },
@@ -38,6 +39,7 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const { getToken } = useRecaptcha();
 
   const toggleAddOn = (id) =>
     setSelectedAddOns((prev) => prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]);
@@ -54,7 +56,8 @@ export default function BookingForm() {
     }
     setLoading(true);
     const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
-    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', vehicleType: form.vehicleType });
+    const recaptchaToken = await getToken('booking').catch(() => null);
+    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', vehicleType: form.vehicleType, recaptchaToken });
     setLoading(false);
     if (res.data?.success) {
       setSubmitted(true);

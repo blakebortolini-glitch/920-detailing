@@ -3,7 +3,19 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { name, phone, email, vehicle, year, service, notes, photoUrls } = await req.json();
+    const { name, phone, email, vehicle, year, service, notes, photoUrls, recaptchaToken } = await req.json();
+
+    // Verify reCAPTCHA token
+    const secretKey = Deno.env.get('reCAPTCHA_secret_key');
+    const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ secret: secretKey, response: recaptchaToken || '' }),
+    });
+    const verifyData = await verifyRes.json();
+    if (!verifyData.success || verifyData.score < 0.5) {
+      return Response.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 });
+    }
 
     const OWNER_EMAIL = Deno.env.get('OWNER_EMAIL');
 
