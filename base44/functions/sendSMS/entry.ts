@@ -11,6 +11,13 @@ const SERVICE_LABELS = {
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Allow only admin users or internal service-role calls
+    const user = await base44.auth.me().catch(() => null);
+    if (user && user.role !== 'admin') {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
     const payload = await req.json();
 
     let bookingId, type;
