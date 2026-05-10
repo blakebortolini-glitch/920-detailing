@@ -1,12 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowDownRight } from 'lucide-react';
 
 export default function Hero() {
   const heroRef = useRef(null);
-
-  const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const navigate = useNavigate();
 
   return (
     <section
@@ -59,7 +57,7 @@ export default function Hero() {
 
       {/* Bottom-left CTA */}
       <div className="absolute bottom-10 left-6 md:left-16 flex items-end gap-8">
-        <button onClick={scrollToContact} className="btn-primary" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
+        <button onClick={() => navigate('/booking')} className="btn-primary" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
           Book Your Detail
           <ArrowDownRight size={16} />
         </button>
