@@ -5,44 +5,64 @@ let siteKeyCache = null;
 
 export function useRecaptcha(containerId) {
   const [ready, setReady] = useState(false);
-  const [siteKey, setSiteKey] = useState(null);
   const widgetIdRef = useRef(null);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
+    mountedRef.current = true;
+    return () => { mountedRef.current = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!containerId) return;
+
+    const renderWidget = () => {
+      const container = document.getElementById(containerId);
+      if (!container || widgetIdRef.current !== null) return;
+      try {
+        widgetIdRef.current = window.grecaptcha.render(containerId, {
+          sitekey: siteKeyCache,
+        });
+        if (mountedRef.current) setReady(true);
+      } catch (e) {
+        console.error('reCAPTCHA render error:', e);
+      }
+    };
+
     const init = async () => {
       if (!siteKeyCache) {
         const res = await base44.functions.invoke('getRecaptchaSiteKey', {});
         siteKeyCache = res.data?.siteKey;
       }
       if (!siteKeyCache) return;
-      setSiteKey(siteKeyCache);
-
-      const renderWidget = () => {
-        if (containerId && document.getElementById(containerId) && widgetIdRef.current === null) {
-          widgetIdRef.current = window.grecaptcha.render(containerId, {
-            sitekey: siteKeyCache,
-          });
-        }
-        setReady(true);
-      };
 
       if (window.grecaptcha && window.grecaptcha.render) {
+        // Already loaded — try immediately, then retry if container not ready yet
         renderWidget();
+        if (widgetIdRef.current === null) {
+          const timer = setInterval(() => {
+            if (document.getElementById(containerId)) {
+              clearInterval(timer);
+              renderWidget();
+            }
+          }, 100);
+          setTimeout(() => clearInterval(timer), 5000);
+        }
         return;
       }
 
-      // Load v2 script (no render= param)
+      // Script not yet loaded
+      window.onRecaptchaLoad = renderWidget;
+
       if (!document.querySelector('script[src*="recaptcha/api.js"]')) {
         const script = document.createElement('script');
         script.src = `https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit`;
         script.async = true;
         script.defer = true;
-        window.onRecaptchaLoad = renderWidget;
         document.head.appendChild(script);
-      } else {
-        window.onRecaptchaLoad = renderWidget;
       }
     };
+
     init();
   }, [containerId]);
 
