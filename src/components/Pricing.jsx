@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const tiers = [
   {
@@ -68,9 +69,7 @@ const tiers = [
 ];
 
 export default function Pricing() {
-  const scrollToContact = () => {
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const navigate = useNavigate();
 
   return (
     <section id="pricing" className="py-24 md:py-36 border-t border-border">
@@ -206,7 +205,7 @@ export default function Pricing() {
                   * {tier.note}
                 </p>
                 <button
-                  onClick={scrollToContact}
+                  onClick={() => navigate('/booking')}
                   className={tier.featured ? 'btn-outline w-full justify-center' : 'btn-primary w-full justify-center'}
                   style={
                     tier.featured
@@ -224,7 +223,7 @@ export default function Pricing() {
                     }
                   }}
                 >
-                  Get a Quote
+                  Book Now
                   <ArrowRight size={14} />
                 </button>
               </div>
@@ -278,10 +277,10 @@ export default function Pricing() {
           <p className="text-tech-grey" style={{ fontSize: '0.85rem' }}>
             Not sure what you need?{' '}
             <button
-              onClick={scrollToContact}
+              onClick={() => navigate('/booking')}
               className="text-ink-black font-semibold underline underline-offset-2 hover:no-underline"
             >
-              Send us a message
+              Book now
             </button>{' '}
             and we'll put together the right package for your vehicle.
           </p>

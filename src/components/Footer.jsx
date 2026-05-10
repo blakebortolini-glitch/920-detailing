@@ -18,7 +18,7 @@ export default function Footer() {
         <div>
           <p className="small-caps-label text-white/40 mb-6">Navigate</p>
           <ul className="space-y-3">
-            {[['services', 'Services'], ['process', 'Why 920'], ['contact', 'Contact']].map(([id, label]) => (
+            {[['services', 'Services'], ['process', 'Why 920']].map(([id, label]) => (
               <li key={id}>
                 <button
                   onClick={() => scrollTo(id)}

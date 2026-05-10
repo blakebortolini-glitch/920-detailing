@@ -40,7 +40,7 @@ export default function Navbar() {
           <Link to="/" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
             home
           </Link>
-          {['services', 'process', 'contact'].map((s) => (
+          {['services', 'process'].map((s) => (
             <button
               key={s}
               onClick={() => scrollTo(s)}
@@ -74,7 +74,7 @@ export default function Navbar() {
           <Link to="/" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
             home
           </Link>
-          {['services', 'process', 'contact'].map((s) => (
+          {['services', 'process'].map((s) => (
             <button
               key={s}
               onClick={() => scrollTo(s)}
