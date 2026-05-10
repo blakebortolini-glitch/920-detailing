@@ -39,7 +39,8 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
-  const { getToken } = useRecaptcha();
+  const RECAPTCHA_CONTAINER_ID = 'recaptcha-booking';
+  const { getToken, reset } = useRecaptcha(RECAPTCHA_CONTAINER_ID);
 
   const toggleAddOn = (id) =>
     setSelectedAddOns((prev) => prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]);
@@ -54,14 +55,21 @@ export default function BookingForm() {
       setError('Please fill in all required fields.');
       return;
     }
+    let recaptchaToken;
+    try {
+      recaptchaToken = getToken();
+    } catch (err) {
+      setError(err.message || 'Please complete the reCAPTCHA.');
+      return;
+    }
     setLoading(true);
     const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
-    const recaptchaToken = await getToken('booking').catch(() => null);
     const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', vehicleType: form.vehicleType, recaptchaToken });
     setLoading(false);
     if (res.data?.success) {
       setSubmitted(true);
     } else {
+      reset();
       setError('Something went wrong. Please call us directly at (920) 255-3123.');
     }
   };
@@ -253,6 +261,9 @@ export default function BookingForm() {
           </div>
         </div>
       </div>
+
+      {/* reCAPTCHA v2 widget */}
+      <div id="recaptcha-booking" className="mb-4"></div>
 
       {error && (
         <p className="font-mono text-destructive mb-4" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>{error}</p>

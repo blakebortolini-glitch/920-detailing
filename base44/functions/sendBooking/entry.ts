@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
       body: new URLSearchParams({ secret: secretKey, response: recaptchaToken || '' }),
     });
     const verifyData = await verifyRes.json();
-    if (!verifyData.success || verifyData.score < 0.5) {
+    if (!verifyData.success) {
       return Response.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 });
     }
 
