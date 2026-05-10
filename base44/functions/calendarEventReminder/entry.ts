@@ -90,46 +90,6 @@ Deno.serve(async (req) => {
         if (!smsRes.ok) console.error('SMS error:', await smsRes.text());
       }
 
-      // Send email reminder via Gmail
-      if (email) {
-        const { accessToken: gmailToken } = await base44.asServiceRole.connectors.getConnection('gmail');
-
-        const subject = `Your 920 Detailing appointment has been updated`;
-        const emailBody = `Hi ${name},
-
-Your detailing appointment with 920 Detailing has been updated.
-
-New appointment time: ${formattedDate}${formattedTime ? ' at ' + formattedTime : ''}
-
-If you have any questions or need to reschedule, call or text us at (920) 255-3123.
-
-See you soon,
-— 920 Detailing
-Kewaunee, Wisconsin`;
-
-        const mimeMessage = [
-          `To: ${email}`,
-          `Subject: ${subject}`,
-          `Content-Type: text/plain; charset=utf-8`,
-          `MIME-Version: 1.0`,
-          ``,
-          emailBody,
-        ].join('\r\n');
-
-        const encoded = btoa(unescape(encodeURIComponent(mimeMessage)))
-          .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-        const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${gmailToken}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ raw: encoded }),
-        });
-
-        if (!gmailRes.ok) console.error('Gmail error:', await gmailRes.text());
-      }
     }
 
     return Response.json({ success: true, processed: recentEvents.length });
