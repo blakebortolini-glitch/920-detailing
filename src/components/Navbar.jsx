@@ -59,7 +59,7 @@ export default function Navbar() {
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden p-2 text-ink-black"
+          className="md:hidden p-2" style={{ color: 'hsl(214, 89%, 52%)' }}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
           style={{ minWidth: 48, minHeight: 48 }}
