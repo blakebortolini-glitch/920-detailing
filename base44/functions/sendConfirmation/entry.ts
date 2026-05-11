@@ -25,19 +25,21 @@ Deno.serve(async (req) => {
 
     const OWNER_EMAIL = Deno.env.get('OWNER_EMAIL');
 
-    let bookingRecord;
-    try {
-      bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
-    } catch (e) {
-      return Response.json({ success: false, reason: 'Booking not found' });
-    }
+    // Use the data already in the automation payload if available (avoids fetch on deleted records)
+    let booking = payload.data || null;
 
-    if (!bookingRecord) {
-      return Response.json({ success: false, reason: 'Booking not found' });
+    if (!booking) {
+      let bookingRecord;
+      try {
+        bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
+      } catch (e) {
+        return Response.json({ success: false, reason: 'Booking not found' });
+      }
+      if (!bookingRecord) {
+        return Response.json({ success: false, reason: 'Booking not found' });
+      }
+      booking = bookingRecord.data || bookingRecord;
     }
-
-    // The SDK wraps entity fields under .data
-    const booking = bookingRecord.data || bookingRecord;
 
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
