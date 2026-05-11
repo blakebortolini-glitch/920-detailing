@@ -16,19 +16,21 @@ Deno.serve(async (req) => {
 
     const bookingId = payload.event?.entity_id || payload.bookingId;
 
-    let bookingRecord;
-    try {
-      bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
-    } catch (e) {
-      return Response.json({ success: false, reason: 'Booking not found' });
-    }
+    // Use the data already in the automation payload if available (avoids fetch on deleted records)
+    let booking = payload.data || null;
 
-    if (!bookingRecord) {
-      return Response.json({ success: false, reason: 'Booking not found' });
+    if (!booking) {
+      let bookingRecord;
+      try {
+        bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
+      } catch (e) {
+        return Response.json({ success: false, reason: 'Booking not found' });
+      }
+      if (!bookingRecord) {
+        return Response.json({ success: false, reason: 'Booking not found' });
+      }
+      booking = bookingRecord.data || bookingRecord;
     }
-
-    // The SDK wraps entity fields under .data
-    const booking = bookingRecord.data || bookingRecord;
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
 
