@@ -24,8 +24,8 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
         ...bookings.map((b) => {
           const raw = b.date || b.data?.date;
           if (!raw) return null;
-          // Handle both 'yyyy-MM-dd' and full ISO strings
-          return format(new Date(raw), 'yyyy-MM-dd');
+          // Slice to 'yyyy-MM-dd' directly — avoids UTC-to-local timezone shift from new Date()
+          return raw.slice(0, 10);
         }).filter(Boolean),
       ]);
       setBookedDates(dates);
