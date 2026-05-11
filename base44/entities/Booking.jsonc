@@ -79,7 +79,7 @@
     "read": {
       "$or": [
         {
-          "email": "{{user.email}}"
+          "data.email": "{{user.email}}"
         },
         {
           "user_condition": {
@@ -91,7 +91,7 @@
     "update": {
       "$or": [
         {
-          "email": "{{user.email}}"
+          "data.email": "{{user.email}}"
         },
         {
           "user_condition": {
