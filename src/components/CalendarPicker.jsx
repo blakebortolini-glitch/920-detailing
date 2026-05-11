@@ -19,7 +19,15 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
 
   useEffect(() => {
     base44.entities.Booking.filter({ status: 'confirmed' }).then((bookings) => {
-      const dates = new Set([...MANUALLY_BLOCKED, ...bookings.map((b) => format(new Date(b.date), 'yyyy-MM-dd'))]);
+      const dates = new Set([
+        ...MANUALLY_BLOCKED,
+        ...bookings.map((b) => {
+          const raw = b.date || b.data?.date;
+          if (!raw) return null;
+          // Handle both 'yyyy-MM-dd' and full ISO strings
+          return format(new Date(raw), 'yyyy-MM-dd');
+        }).filter(Boolean),
+      ]);
       setBookedDates(dates);
     });
   }, []);
