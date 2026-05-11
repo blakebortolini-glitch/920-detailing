@@ -11,6 +11,7 @@ import Booking from './pages/Booking';
 import Admin from './pages/Admin';
 import SubmitReview from './pages/SubmitReview';
 import MyBookings from './pages/MyBookings';
+import GoogleVerification from './pages/GoogleVerification';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
       <Route path="/submit-review" element={<SubmitReview />} />
       <Route path="/my-bookings" element={<MyBookings />} />
       {/* Add your page Route elements here */}
+      <Route path="/google896bcd66563ea31c.html" element={<GoogleVerification />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
