@@ -25,10 +25,19 @@ Deno.serve(async (req) => {
 
     const OWNER_EMAIL = Deno.env.get('OWNER_EMAIL');
 
-    const booking = await base44.asServiceRole.entities.Booking.get(bookingId);
-    if (!booking) {
+    let bookingRecord;
+    try {
+      bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
+    } catch (e) {
       return Response.json({ success: false, reason: 'Booking not found' });
     }
+
+    if (!bookingRecord) {
+      return Response.json({ success: false, reason: 'Booking not found' });
+    }
+
+    // The SDK wraps entity fields under .data
+    const booking = bookingRecord.data || bookingRecord;
 
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
