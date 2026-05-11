@@ -15,11 +15,20 @@ Deno.serve(async (req) => {
     const payload = await req.json();
 
     const bookingId = payload.event?.entity_id || payload.bookingId;
-    const booking = await base44.asServiceRole.entities.Booking.get(bookingId);
 
-    if (!booking) {
+    let bookingRecord;
+    try {
+      bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
+    } catch (e) {
       return Response.json({ success: false, reason: 'Booking not found' });
     }
+
+    if (!bookingRecord) {
+      return Response.json({ success: false, reason: 'Booking not found' });
+    }
+
+    // The SDK wraps entity fields under .data
+    const booking = bookingRecord.data || bookingRecord;
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
 
@@ -51,7 +60,12 @@ Deno.serve(async (req) => {
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
 
-    const dateStr = booking.date;
+    // Normalize date — handle both 'yyyy-MM-dd' and full ISO strings
+    const rawDate = booking.date;
+    const dateStr = rawDate ? rawDate.split('T')[0] : null;
+    if (!dateStr) {
+      return Response.json({ success: false, reason: 'Booking has no date' });
+    }
     const timeStr = booking.time || '09:00';
 
     const parseTime = (t) => {
@@ -116,11 +130,16 @@ Deno.serve(async (req) => {
     const created = await calRes.json();
 
     // 2. Create an all-day block event to mark the day as fully booked
+    // All-day events require end date to be the next day
+    const nextDay = new Date(dateStr + 'T12:00:00');
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayStr = nextDay.toISOString().split('T')[0];
+
     const blockEvent = {
       summary: '🔒 FULLY BOOKED — No Availability',
       description: `This day is fully booked. Appointment: ${serviceLabel} for ${booking.name}.`,
       start: { date: dateStr },
-      end: { date: dateStr },
+      end: { date: nextDayStr },
       colorId: '11',
       transparency: 'opaque',
     };
