@@ -5,7 +5,7 @@ import WhyUs from '../components/WhyUs';
 import BeforeAfter from '../components/BeforeAfter';
 import Pricing from '../components/Pricing';
 import PriceEstimator from '../components/PriceEstimator';
-import Reviews from '../components/Reviews';
+import ReviewsCarousel from '../components/ReviewsCarousel';
 import Footer from '../components/Footer';
 import AdvisorChat from '../components/AdvisorChat';
 
@@ -19,7 +19,7 @@ export default function Home() {
       <BeforeAfter />
       <Pricing />
       <PriceEstimator />
-      <Reviews />
+      <ReviewsCarousel />
       <Footer />
       <AdvisorChat />
     </main>

@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import BookingsTable from '@/components/admin/BookingsTable';
+import ReviewsManager from '@/components/admin/ReviewsManager';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Admin() {
   const { user } = useAuth();
+  const [tab, setTab] = useState('bookings');
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -43,46 +45,75 @@ export default function Admin() {
   return (
     <div className="min-h-screen bg-background font-inter">
       {/* Header */}
-      <div className="border-b border-border px-6 md:px-16 py-6 flex items-center justify-between">
+      <div className="border-b border-border px-6 md:px-16 py-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <p className="small-caps-label text-tech-grey mb-1">920 Detailing</p>
           <h1 className="font-inter font-black text-ink-black text-2xl" style={{ letterSpacing: '-0.03em' }}>
-            Booking Dashboard
+            Admin Dashboard
           </h1>
         </div>
-        <div className="flex items-center gap-3">
-          {['all', 'new', 'confirmed', 'completed', 'cancelled'].map((s) => (
+        {/* Tab switcher */}
+        <div className="flex items-center gap-2">
+          {['bookings', 'reviews'].map((t) => (
             <button
-              key={s}
-              onClick={() => setStatusFilter(s)}
-              className="small-caps-label px-3 py-2 border transition-colors"
+              key={t}
+              onClick={() => setTab(t)}
+              className="small-caps-label px-4 py-2 border transition-colors"
               style={{
                 fontSize: '0.6rem',
-                background: statusFilter === s ? '#0A0A0A' : 'transparent',
-                color: statusFilter === s ? '#FFFFFF' : '#767676',
-                borderColor: statusFilter === s ? '#0A0A0A' : '#E8E8E8',
+                background: tab === t ? '#0A0A0A' : 'transparent',
+                color: tab === t ? '#FFFFFF' : '#767676',
+                borderColor: tab === t ? '#0A0A0A' : '#E8E8E8',
               }}
             >
-              {s}
+              {t}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Table */}
-      <div className="px-6 md:px-16 py-10">
-        {loading ? (
-          <div className="flex items-center justify-center py-24">
-            <div className="w-6 h-6 border-2 border-border border-t-ink-black rounded-full animate-spin" />
+      {/* Bookings Tab */}
+      {tab === 'bookings' && (
+        <>
+          <div className="px-6 md:px-16 pt-6 flex items-center gap-2 flex-wrap">
+            {['all', 'new', 'confirmed', 'completed', 'cancelled'].map((s) => (
+              <button
+                key={s}
+                onClick={() => setStatusFilter(s)}
+                className="small-caps-label px-3 py-2 border transition-colors"
+                style={{
+                  fontSize: '0.6rem',
+                  background: statusFilter === s ? '#0A0A0A' : 'transparent',
+                  color: statusFilter === s ? '#FFFFFF' : '#767676',
+                  borderColor: statusFilter === s ? '#0A0A0A' : '#E8E8E8',
+                }}
+              >
+                {s}
+              </button>
+            ))}
           </div>
-        ) : filtered.length === 0 ? (
-          <div className="text-center py-24 border border-border">
-            <p className="small-caps-label text-tech-grey">No bookings found</p>
+          <div className="px-6 md:px-16 py-10">
+            {loading ? (
+              <div className="flex items-center justify-center py-24">
+                <div className="w-6 h-6 border-2 border-border border-t-ink-black rounded-full animate-spin" />
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="text-center py-24 border border-border">
+                <p className="small-caps-label text-tech-grey">No bookings found</p>
+              </div>
+            ) : (
+              <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} />
+            )}
           </div>
-        ) : (
-          <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} />
-        )}
-      </div>
+        </>
+      )}
+
+      {/* Reviews Tab */}
+      {tab === 'reviews' && (
+        <div className="px-6 md:px-16 py-10">
+          <ReviewsManager />
+        </div>
+      )}
     </div>
   );
 }
