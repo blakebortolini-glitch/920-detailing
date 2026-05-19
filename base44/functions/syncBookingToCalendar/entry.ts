@@ -58,6 +58,66 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, action: 'deleted' });
     }
 
+    // --- SERVICE UPDATE: patch the existing calendar event with new service details ---
+    if (booking.calendarEventId && payload.event?.type === 'update') {
+      const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
+      const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
+      const rawDate = booking.date;
+      const dateStr = rawDate ? rawDate.split('T')[0] : null;
+      if (!dateStr) return Response.json({ success: false, reason: 'Booking has no date' });
+      const timeStr = booking.time || '09:00';
+
+      const parseTime = (t) => {
+        const ampm = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (ampm) {
+          let h = parseInt(ampm[1]);
+          const m = ampm[2];
+          const period = ampm[3].toUpperCase();
+          if (period === 'PM' && h !== 12) h += 12;
+          if (period === 'AM' && h === 12) h = 0;
+          return `${String(h).padStart(2, '0')}:${m}`;
+        }
+        return t;
+      };
+
+      const time24 = parseTime(timeStr);
+      const startDateTime = `${dateStr}T${time24}:00`;
+      const durationHours = { interior: 4, exterior: 6, full: 8, ceramic: 10, unsure: 2 };
+      const dur = durationHours[booking.service] || 4;
+      const [startHour, startMin] = time24.split(':').map(Number);
+      const totalEndMins = startHour * 60 + startMin + dur * 60;
+      const endHour = Math.floor(totalEndMins / 60) % 24;
+      const endMin = totalEndMins % 60;
+      const endDateTime = `${dateStr}T${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}:00`;
+
+      const description = [
+        `Customer: ${booking.name}`,
+        `Phone: ${booking.phone}`,
+        booking.email ? `Email: ${booking.email}` : null,
+        `Vehicle: ${vehicleStr}`,
+        `Service: ${serviceLabel}`,
+        booking.notes ? `Notes: ${booking.notes}` : null,
+      ].filter(Boolean).join('\n');
+
+      const patchRes = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.calendarEventId}`,
+        {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            summary: `${serviceLabel} - ${booking.name} (${vehicleStr})`,
+            description,
+            start: { dateTime: startDateTime, timeZone: 'America/Chicago' },
+            end: { dateTime: endDateTime, timeZone: 'America/Chicago' },
+          }),
+        }
+      );
+
+      if (!patchRes.ok) console.error('Calendar patch error:', await patchRes.text());
+
+      return Response.json({ success: true, action: 'updated' });
+    }
+
     // --- CREATION: add events to Google Calendar ---
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;

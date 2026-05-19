@@ -4,12 +4,14 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import MyBookingCard from '../components/MyBookingCard';
 import RescheduleModal from '../components/RescheduleModal';
+import ChangeServiceModal from '../components/ChangeServiceModal';
 
 export default function MyBookings() {
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rescheduleBooking, setRescheduleBooking] = useState(null);
+  const [changeServiceBooking, setChangeServiceBooking] = useState(null);
 
   useEffect(() => {
     const init = async () => {
@@ -35,6 +37,11 @@ export default function MyBookings() {
   const handleRescheduleSuccess = (updatedBooking) => {
     setBookings(prev => prev.map(b => b.id === updatedBooking.id ? updatedBooking : b));
     setRescheduleBooking(null);
+  };
+
+  const handleChangeServiceSuccess = (updatedBooking) => {
+    setBookings(prev => prev.map(b => b.id === updatedBooking.id ? updatedBooking : b));
+    setChangeServiceBooking(null);
   };
 
   const active = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'completed');
@@ -89,6 +96,7 @@ export default function MyBookings() {
                       booking={b}
                       onCancel={handleCancel}
                       onReschedule={setRescheduleBooking}
+                      onChangeService={setChangeServiceBooking}
                     />
                   ))}
                 </div>
@@ -113,6 +121,14 @@ export default function MyBookings() {
           booking={rescheduleBooking}
           onClose={() => setRescheduleBooking(null)}
           onSuccess={handleRescheduleSuccess}
+        />
+      )}
+
+      {changeServiceBooking && (
+        <ChangeServiceModal
+          booking={changeServiceBooking}
+          onClose={() => setChangeServiceBooking(null)}
+          onSuccess={handleChangeServiceSuccess}
         />
       )}
 

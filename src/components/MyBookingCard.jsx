@@ -15,7 +15,7 @@ const STATUS_CONFIG = {
   cancelled: { label: 'Cancelled', color: 'bg-red-50 text-red-700 border-red-200' },
 };
 
-export default function MyBookingCard({ booking, onCancel, onReschedule }) {
+export default function MyBookingCard({ booking, onCancel, onReschedule, onChangeService }) {
   const [confirming, setConfirming] = useState(false);
 
   const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
@@ -61,6 +61,14 @@ export default function MyBookingCard({ booking, onCancel, onReschedule }) {
           >
             Reschedule
           </button>
+          {onChangeService && (
+            <button
+              onClick={() => onChangeService(booking)}
+              className="btn-outline text-xs py-3 px-5 justify-center"
+            >
+              Modify Service
+            </button>
+          )}
           <button
             onClick={handleCancelClick}
             className={`text-xs font-semibold tracking-widest uppercase border py-3 px-5 transition-all duration-200 ${
