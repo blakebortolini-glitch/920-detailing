@@ -7,7 +7,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
-    const { name, phone, email, vehicle, year, vehicleType, service, date, time, notes, addOns, recaptchaToken } = body;
+    const { name, phone, email, vehicle, year, vehicleType, service, date, time, notes, addOns, add_ons, recaptchaToken } = body;
 
     // Verify reCAPTCHA token
     const secretKey = Deno.env.get('reCAPTCHA_secret_key');
@@ -32,7 +32,8 @@ Deno.serve(async (req) => {
 
     // 1. Save booking to database
     const newBooking = await base44.asServiceRole.entities.Booking.create({
-      name, phone, email, vehicle, year, service, date, time, notes, status: 'new'
+      name, phone, email, vehicle, year, service, date, time, notes, status: 'new',
+      ...(add_ons && add_ons.length > 0 ? { add_ons } : {})
     });
 
     // 2. Send confirmation email to customer (if email provided)

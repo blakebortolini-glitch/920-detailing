@@ -64,7 +64,7 @@ export default function BookingForm() {
     }
     setLoading(true);
     const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
-    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', vehicleType: form.vehicleType, recaptchaToken });
+    const res = await base44.functions.invoke('sendBooking', { ...form, addOns: addOnNames.join(', ') || '', add_ons: addOnNames, vehicleType: form.vehicleType, recaptchaToken });
     setLoading(false);
     if (res.data?.success) {
       setSubmitted(true);

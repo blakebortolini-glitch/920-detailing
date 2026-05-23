@@ -33,6 +33,13 @@
       ],
       "description": "Service type requested"
     },
+    "add_ons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of selected add-on names for this booking"
+    },
     "date": {
       "type": "string",
       "format": "date",

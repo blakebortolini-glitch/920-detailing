@@ -43,6 +43,9 @@ Deno.serve(async (req) => {
 
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
+    const addOnsStr = booking.add_ons && booking.add_ons.length > 0
+      ? booking.add_ons.join(', ')
+      : null;
 
     let subject, body;
 
@@ -56,7 +59,7 @@ Here's a summary of your request:
 
   Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 ${booking.notes ? `  Notes:      ${booking.notes}\n` : ''}
 If you need to reach us sooner, call or text: (920) 255-3123
@@ -71,7 +74,7 @@ Great news — your appointment with 920 Detailing has been confirmed!
 
   Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 
 Please arrive at the scheduled time. If anything comes up, call or text us at (920) 255-3123 and we'll work something out.
@@ -87,7 +90,7 @@ We're sorry to let you know that your upcoming appointment with 920 Detailing ha
 
   Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 
 If you'd like to reschedule or have any questions, please call or text us at (920) 255-3123 and we'd be happy to get you set up.
@@ -103,7 +106,7 @@ This is a friendly reminder that your 920 Detailing appointment is TOMORROW!
 
   Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 
 If anything comes up, call or text us at (920) 255-3123 and we'll work something out.
@@ -152,7 +155,7 @@ Kewaunee, Wisconsin`;
   Phone:      ${booking.phone}
 ${booking.email ? `  Email:      ${booking.email}\n` : ''}  Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 ${booking.notes ? `  Notes:      ${booking.notes}\n` : ''}
 Log in to the admin panel to confirm or cancel this booking.`;
@@ -164,7 +167,7 @@ Log in to the admin panel to confirm or cancel this booking.`;
   Phone:      ${booking.phone}
 ${booking.email ? `  Email:      ${booking.email}\n` : ''}  Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 ${booking.notes ? `  Notes:      ${booking.notes}\n` : ''}
 A confirmation email has been sent to the customer.`;
@@ -176,7 +179,7 @@ A confirmation email has been sent to the customer.`;
   Phone:      ${booking.phone}
   Vehicle:    ${vehicleStr}
   Service:    ${serviceLabel}
-  Date:       ${booking.date}
+${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}`;
     }
 
