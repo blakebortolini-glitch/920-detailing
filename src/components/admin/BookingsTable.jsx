@@ -79,10 +79,24 @@ function BookingRow({ booking, onUpdateStatus }) {
                 {booking.email && <p className="text-sm text-tech-grey">{booking.email}</p>}
               </div>
 
-              {/* Notes */}
+              {/* Add-Ons */}
               <div>
-                <p className="small-caps-label mb-2">Notes</p>
-                <p className="text-sm text-tech-grey">{booking.notes || 'No notes provided.'}</p>
+                <p className="small-caps-label mb-2">Add-Ons</p>
+                {booking.add_ons && booking.add_ons.length > 0 ? (
+                  <ul className="space-y-0.5">
+                    {booking.add_ons.map((a, i) => (
+                      <li key={i} className="text-sm text-ink-black">— {a}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-tech-grey">None</p>
+                )}
+                {booking.notes && (
+                  <div className="mt-3">
+                    <p className="small-caps-label mb-1">Notes</p>
+                    <p className="text-sm text-tech-grey">{booking.notes}</p>
+                  </div>
+                )}
               </div>
 
               {/* Actions */}

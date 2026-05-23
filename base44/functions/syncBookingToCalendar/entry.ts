@@ -96,6 +96,7 @@ Deno.serve(async (req) => {
         booking.email ? `Email: ${booking.email}` : null,
         `Vehicle: ${vehicleStr}`,
         `Service: ${serviceLabel}`,
+        booking.add_ons && booking.add_ons.length > 0 ? `Add-Ons: ${booking.add_ons.join(', ')}` : null,
         booking.notes ? `Notes: ${booking.notes}` : null,
       ].filter(Boolean).join('\n');
 
@@ -162,6 +163,7 @@ Deno.serve(async (req) => {
       booking.email ? `Email: ${booking.email}` : null,
       `Vehicle: ${vehicleStr}`,
       `Service: ${serviceLabel}`,
+      booking.add_ons && booking.add_ons.length > 0 ? `Add-Ons: ${booking.add_ons.join(', ')}` : null,
       booking.notes ? `Notes: ${booking.notes}` : null,
     ].filter(Boolean).join('\n');
 
