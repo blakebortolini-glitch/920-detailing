@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const tiers = [
@@ -71,7 +70,6 @@ const tiers = [
 
 export default function Pricing() {
   const navigate = useNavigate();
-  const [addOnsOpen, setAddOnsOpen] = useState(false);
 
   return (
     <section id="pricing" className="py-24 md:py-36 border-t border-border">
@@ -233,14 +231,11 @@ export default function Pricing() {
           ))}
         </div>
 
-        {/* Add-Ons Dropdown */}
+        {/* Add-Ons */}
         <div className="mt-0 border-t border-l border-border">
-          <div className="border-b border-r border-border">
-            <button
-              onClick={() => setAddOnsOpen(!addOnsOpen)}
-              className="w-full p-8 md:p-10 flex items-center justify-between hover:bg-muted/30 transition-colors"
-            >
-              <div className="text-left">
+          <div className="border-b border-r border-border p-8 md:p-10">
+            <div className="flex items-start justify-between mb-6">
+              <div>
                 <p className="small-caps-label mb-2">Interior Add-Ons</p>
                 <h3
                   className="font-inter font-black text-ink-black"
@@ -249,41 +244,31 @@ export default function Pricing() {
                   Customize Your Detail
                 </h3>
               </div>
-              <div className="flex items-center gap-4 flex-shrink-0 ml-6">
-                <span className="font-mono text-tech-grey hidden sm:block" style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}>ADD TO ANY SERVICE</span>
-                <ChevronDown
-                  size={20}
-                  className="text-tech-grey transition-transform duration-300"
-                  style={{ transform: addOnsOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
-                />
-              </div>
-            </button>
-
-            {addOnsOpen && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-border">
-                {[
-                  { name: 'Pet Hair Removal', price: '$25–$50', note: 'Price depends on severity and coverage area.' },
-                  { name: 'Steam Cleaning', price: '$15', note: 'Full interior steam sanitization.' },
-                  { name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Price depends on stain severity and area.' },
-                  { name: 'Odor Elimination', price: '$10–$40', note: 'Price depends on severity of odor.' },
-                ].map((addon, i) => (
-                  <div key={i} className="border-b border-r border-border p-6">
-                    <p className="font-mono text-tech-grey mb-3" style={{ fontSize: '0.6rem', letterSpacing: '0.12em' }}>
-                      /{String(i + 1).padStart(2, '0')}
-                    </p>
-                    <p className="font-inter font-bold text-ink-black mb-2" style={{ fontSize: '0.95rem', letterSpacing: '-0.01em' }}>
-                      {addon.name}
-                    </p>
-                    <p className="font-inter font-black text-ink-black mb-3" style={{ fontSize: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                      {addon.price}
-                    </p>
-                    <p className="text-tech-grey" style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
-                      {addon.note}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+              <span className="font-mono text-tech-grey" style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}>ADD TO ANY SERVICE</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-border">
+              {[
+                { name: 'Pet Hair Removal', price: '$25–$50', note: 'Price depends on severity and coverage area.' },
+                { name: 'Steam Cleaning', price: '$15', note: 'Full interior steam sanitization.' },
+                { name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Price depends on stain severity and area.' },
+                { name: 'Odor Elimination', price: '$10–$40', note: 'Price depends on severity of odor.' },
+              ].map((addon, i) => (
+                <div key={i} className="border-b border-r border-border p-6">
+                  <p className="font-mono text-tech-grey mb-3" style={{ fontSize: '0.6rem', letterSpacing: '0.12em' }}>
+                    /{String(i + 1).padStart(2, '0')}
+                  </p>
+                  <p className="font-inter font-bold text-ink-black mb-2" style={{ fontSize: '0.95rem', letterSpacing: '-0.01em' }}>
+                    {addon.name}
+                  </p>
+                  <p className="font-inter font-black text-ink-black mb-3" style={{ fontSize: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    {addon.price}
+                  </p>
+                  <p className="text-tech-grey" style={{ fontSize: '0.78rem', lineHeight: 1.5 }}>
+                    {addon.note}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 

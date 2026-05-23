@@ -46,7 +46,16 @@ function BookingRow({ booking, onUpdateStatus }) {
           {booking.year ? `${booking.year} ` : ''}{booking.vehicle}
         </td>
         <td className="py-4 px-4 text-sm text-ink-black">
-          {SERVICE_LABELS[booking.service] || booking.service}
+          <p>{SERVICE_LABELS[booking.service] || booking.service}</p>
+          {booking.add_ons && booking.add_ons.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {booking.add_ons.map((a, i) => (
+                <span key={i} className="font-mono text-xs px-1.5 py-0.5 border border-border text-tech-grey" style={{ fontSize: '0.58rem', letterSpacing: '0.06em' }}>
+                  +{a}
+                </span>
+              ))}
+            </div>
+          )}
         </td>
         <td className="py-4 px-4 text-sm text-ink-black">
           <p>{booking.date}</p>
