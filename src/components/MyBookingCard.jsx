@@ -48,6 +48,15 @@ export default function MyBookingCard({ booking, onCancel, onReschedule, onChang
           <span>📅 {booking.date}</span>
           <span>🕐 {booking.time}</span>
         </div>
+        {booking.add_ons && booking.add_ons.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {booking.add_ons.map((a, i) => (
+              <span key={i} className="text-xs font-mono border border-gray-200 px-2 py-0.5 text-tech-grey">
+                + {a}
+              </span>
+            ))}
+          </div>
+        )}
         {booking.notes && (
           <p className="text-sm text-tech-grey border-l-2 border-gray-200 pl-3">{booking.notes}</p>
         )}
