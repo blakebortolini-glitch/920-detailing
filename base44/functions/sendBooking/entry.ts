@@ -44,61 +44,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    // 2. Send SMS via Twilio
-    const accountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
-    const authToken = Deno.env.get('TWILIO_AUTH_TOKEN');
-    const fromPhone = Deno.env.get('TWILIO_PHONE_NUMBER');
-
-    const smsBody = `📅 New Booking!\n${name} | ${phone}\n${year ? year + ' ' : ''}${vehicle}${vehicleType ? ' (' + vehicleType + ')' : ''}\n${serviceLabel}${addOns ? '\nAdd-ons: ' + addOns : ''}\n${date} @ ${time}${notes ? '\nNotes: ' + notes : ''}`;
-
-    const twilioRes = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          To: OWNER_PHONE,
-          From: fromPhone,
-          Body: smsBody,
-        }),
-      }
-    );
-
-    if (!twilioRes.ok) {
-      const err = await twilioRes.text();
-      console.error('Twilio owner SMS error:', err);
-    }
-
-    // 4. Send confirmation SMS to customer (if phone provided)
-    if (phone) {
-      const customerSmsBody = `Hi ${name}! Your booking request with 920 Detailing has been received.\n\nService: ${serviceLabel}\nVehicle: ${year ? year + ' ' : ''}${vehicle}\nDate: ${date} @ ${time}\n\nWe'll confirm your appointment within 24 hrs. Questions? Call/text (920) 255-3123.`;
-
-      const customerSmsRes = await fetch(
-        `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${btoa(`${accountSid}:${authToken}`)}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            To: phone,
-            From: fromPhone,
-            Body: customerSmsBody,
-          }),
-        }
-      );
-
-      if (!customerSmsRes.ok) {
-        const err = await customerSmsRes.text();
-        console.error('Twilio customer SMS error:', err);
-      }
-    }
-
-    // 5. Send owner notification email via Gmail
+    // 3. Send owner notification email via Gmail
     try {
       const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 

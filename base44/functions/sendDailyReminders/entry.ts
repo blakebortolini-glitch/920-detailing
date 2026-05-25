@@ -34,14 +34,6 @@ Deno.serve(async (req) => {
         type: 'reminder',
       });
 
-      // Send SMS reminder (if phone exists)
-      if (booking.phone) {
-        await base44.asServiceRole.functions.invoke('sendSMS', {
-          bookingId: booking.id,
-          type: 'reminder',
-        });
-      }
-
       sent++;
     }
 
