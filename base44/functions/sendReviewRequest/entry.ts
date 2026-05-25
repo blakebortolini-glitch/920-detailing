@@ -62,12 +62,17 @@ Deno.serve(async (req) => {
 
 We hope your ${serviceLabel} went exactly as expected — or better!
 
-Your ${vehicleStr} is looking sharp, and we'd love to hear what you thought. Taking 30 seconds to leave a review helps us grow and lets other customers know what to expect.
+Your ${vehicleStr} is looking sharp, and we'd love to hear what you thought. It only takes a minute and it means a lot to a small local business like ours.
 
-Leave a review here:
-https://920detailing.com/submit-review
+You have two easy ways to leave a review:
 
-Thanks again for choosing 920 Detailing. We appreciate your business and look forward to seeing you next time!
+1. Chat with our review assistant (quickest):
+   https://920detailing.com/review-chat?name=${encodeURIComponent(booking.name)}&vehicle=${encodeURIComponent(vehicleStr)}&service=${encodeURIComponent(booking.service)}
+
+2. Fill out the review form:
+   https://920detailing.com/submit-review
+
+Thanks again for choosing 920 Detailing — we appreciate your trust and look forward to seeing you next time!
 
 — Blake
 920 Detailing

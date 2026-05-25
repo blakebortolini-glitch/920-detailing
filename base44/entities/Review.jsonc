@@ -45,6 +45,10 @@
       "type": "string",
       "description": "Optional extended description or context for this review (up to 1000 characters)",
       "maxLength": 1000
+    },
+    "booking_id": {
+      "type": "string",
+      "description": "ID of the associated Booking record"
     }
   },
   "required": [
