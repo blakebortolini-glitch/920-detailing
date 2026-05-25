@@ -109,10 +109,20 @@ This is a friendly reminder that your 920 Detailing appointment is TOMORROW!
 ${addOnsStr ? `  Add-Ons:    ${addOnsStr}\n` : ''}  Date:       ${booking.date}
   Time:       ${booking.time}
 
+ARRIVAL INSTRUCTIONS:
+- Please have your vehicle accessible and ready at the scheduled time.
+- Remove any personal items from the areas being detailed.
+- If you have a garage or prefer a specific location, just let us know in advance.
+- We are appointment-only — located in Kewaunee, Wisconsin. Address will be confirmed upon booking.
+
+Need to confirm or reschedule? Visit your bookings page:
+https://920detailing.com/my-bookings
+
 If anything comes up, call or text us at (920) 255-3123 and we'll work something out.
 
 See you tomorrow,
-— 920 Detailing
+— Blake
+920 Detailing
 Kewaunee, Wisconsin`;
     } else {
       return Response.json({ success: false, reason: 'Unknown type' });

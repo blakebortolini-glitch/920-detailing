@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
     } else if (type === 'cancelled') {
       smsBody = `Hi ${booking.name}, we're sorry to let you know that your appointment with 920 Detailing has been cancelled.\n\nService: ${serviceLabel}\nVehicle: ${vehicleStr}\nDate: ${booking.date} @ ${booking.time}\n\nWe'd be happy to get another appointment set up for you. If you have any questions, please call or text us at (920) 255-3123.`;
     } else if (type === 'reminder') {
-      smsBody = `Hi ${booking.name}! Just a reminder that your 920 Detailing appointment is TOMORROW.\n\nService: ${serviceLabel}\nVehicle: ${vehicleStr}\nDate: ${booking.date} @ ${booking.time}\n\nSee you then! Questions? Call or text (920) 255-3123.`;
+      smsBody = `Hi ${booking.name}! Reminder: your 920 Detailing appointment is TOMORROW.\n\nService: ${serviceLabel}\nVehicle: ${vehicleStr}\nDate: ${booking.date} @ ${booking.time}\n\nARRIVAL: Please have your vehicle ready and accessible. Remove personal items from areas being detailed.\n\nConfirm or reschedule: https://920detailing.com/my-bookings\n\nQuestions? Call or text (920) 255-3123.`;
     } else {
       return Response.json({ success: false, reason: 'Unknown type' });
     }
