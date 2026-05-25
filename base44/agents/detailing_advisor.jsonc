@@ -26,11 +26,13 @@
   "selected_skill_names": [
     "brand-voice"
   ],
-  "selected_workspace_skill_ids": [],
+  "selected_workspace_skill_ids": [
+    "69fe305b2c797b4aef50323c"
+  ],
   "model": "automatic",
-  "whatsapp_greeting": "",
-  "telegram_greeting": "",
-  "line_greeting": "",
+  "whatsapp_greeting": null,
+  "telegram_greeting": null,
+  "line_greeting": null,
   "memory_config": {
     "enabled": true,
     "scope": "both",
