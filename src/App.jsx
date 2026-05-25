@@ -13,6 +13,7 @@ import SubmitReview from './pages/SubmitReview';
 import MyBookings from './pages/MyBookings';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ReviewChat from './pages/ReviewChat';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -47,6 +48,7 @@ const AuthenticatedApp = () => {
       <Route path="/my-bookings" element={<MyBookings />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/review-chat" element={<ReviewChat />} />
       {/* Add your page Route elements here */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>
