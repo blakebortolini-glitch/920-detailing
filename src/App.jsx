@@ -11,6 +11,8 @@ import Booking from './pages/Booking';
 import Admin from './pages/Admin';
 import SubmitReview from './pages/SubmitReview';
 import MyBookings from './pages/MyBookings';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -43,6 +45,8 @@ const AuthenticatedApp = () => {
       <Route path="/admin" element={<Admin />} />
       <Route path="/submit-review" element={<SubmitReview />} />
       <Route path="/my-bookings" element={<MyBookings />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       {/* Add your page Route elements here */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>

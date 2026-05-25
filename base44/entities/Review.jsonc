@@ -40,6 +40,11 @@
       "type": "boolean",
       "default": false,
       "description": "Whether the review is approved to show on homepage"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended description or context for this review (up to 1000 characters)",
+      "maxLength": 1000
     }
   },
   "required": [

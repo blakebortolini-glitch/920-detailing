@@ -29,6 +29,12 @@ export default function Footer() {
                 </button>
               </li>
             ))}
+            <li>
+              <a href="/about" className="text-white/60 hover:text-white transition-colors" style={{ fontSize: '0.9rem' }}>About</a>
+            </li>
+            <li>
+              <a href="/contact" className="text-white/60 hover:text-white transition-colors" style={{ fontSize: '0.9rem' }}>Contact</a>
+            </li>
           </ul>
         </div>
 
