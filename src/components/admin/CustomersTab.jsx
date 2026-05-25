@@ -10,13 +10,7 @@ const SERVICE_LABELS = {
   unsure: 'Needs Quote',
 };
 
-const SERVICE_PRICES = {
-  interior: 150,
-  exterior: 200,
-  ceramic: 600,
-  full: 185,
-  unsure: 0,
-};
+
 
 function CustomerRow({ customer }) {
   const [open, setOpen] = useState(false);
@@ -39,7 +33,7 @@ function CustomerRow({ customer }) {
           {customer.completedBookings}
         </td>
         <td className="py-4 px-4 text-sm font-semibold text-ink-black text-center">
-          ${customer.lifetimeValue.toLocaleString()}+
+          {customer.lifetimeValue > 0 ? `$${customer.lifetimeValue.toLocaleString()}` : <span className="text-tech-grey text-xs">—</span>}
         </td>
         <td className="py-4 px-4 text-xs text-tech-grey">
           {customer.lastBookingDate
@@ -79,6 +73,9 @@ function CustomerRow({ customer }) {
                   </div>
                   <div className="text-right flex-shrink-0 ml-4">
                     <p className="text-xs text-ink-black">{b.date?.split('T')[0]} @ {b.time}</p>
+                    {b.total_price > 0 && (
+                      <p className="font-mono text-sm font-semibold text-ink-black mt-0.5">${b.total_price.toLocaleString()}</p>
+                    )}
                     <span
                       className="small-caps-label px-2 py-0.5 mt-1 inline-block"
                       style={{
@@ -124,7 +121,7 @@ export default function CustomersTab({ bookings }) {
       c.totalBookings++;
       if (b.status === 'completed') {
         c.completedBookings++;
-        c.lifetimeValue += SERVICE_PRICES[b.service] || 0;
+        if (b.total_price > 0) c.lifetimeValue += b.total_price;
       }
       if (!c.lastBookingDate || new Date(b.date) > new Date(c.lastBookingDate)) {
         c.lastBookingDate = b.date;
@@ -165,7 +162,7 @@ export default function CustomersTab({ bookings }) {
         {[
           { label: 'Total Customers', value: customers.length },
           { label: 'Repeat Customers', value: customers.filter((c) => c.totalBookings > 1).length },
-          { label: 'Est. Lifetime Revenue', value: `$${customers.reduce((s, c) => s + c.lifetimeValue, 0).toLocaleString()}+` },
+          { label: 'Actual Lifetime Revenue', value: `$${customers.reduce((s, c) => s + c.lifetimeValue, 0).toLocaleString()}` },
         ].map((stat) => (
           <div key={stat.label} className="border-b border-r border-border p-6">
             <p className="small-caps-label text-tech-grey mb-1">{stat.label}</p>
@@ -181,7 +178,7 @@ export default function CustomersTab({ bookings }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border bg-muted/30">
-              {['Customer', 'Total Bookings', 'Completed', 'Est. LTV', 'Last Booking', ''].map((h) => (
+              {['Customer', 'Total Bookings', 'Completed', 'Actual LTV', 'Last Booking', ''].map((h) => (
                 <th
                   key={h}
                   className="py-3 px-4 text-left small-caps-label text-tech-grey"
