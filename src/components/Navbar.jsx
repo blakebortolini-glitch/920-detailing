@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -52,6 +54,14 @@ export default function Navbar() {
           <Link to="/my-bookings" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
             my bookings
           </Link>
+          <Link to="/submit-review" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
+            leave a review
+          </Link>
+          {user?.role === 'admin' && (
+            <Link to="/admin" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
+              admin
+            </Link>
+          )}
           <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem', background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
             Book Now
           </Link>
@@ -86,6 +96,14 @@ export default function Navbar() {
           <Link to="/my-bookings" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
             my bookings
           </Link>
+          <Link to="/submit-review" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
+            leave a review
+          </Link>
+          {user?.role === 'admin' && (
+            <Link to="/admin" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
+              admin panel
+            </Link>
+          )}
           <Link to="/booking" className="btn-primary w-full justify-center" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }} onClick={() => setMenuOpen(false)}>
             Book Now
           </Link>
