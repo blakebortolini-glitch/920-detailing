@@ -4,6 +4,7 @@ import BookingsTable from '@/components/admin/BookingsTable';
 import ReviewsManager from '@/components/admin/ReviewsManager';
 import CustomersTab from '@/components/admin/CustomersTab';
 import RevenueTab from '@/components/admin/RevenueTab';
+import MembershipTab from '@/components/admin/MembershipTab';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Admin() {
@@ -60,7 +61,7 @@ export default function Admin() {
         </div>
         {/* Tab switcher */}
         <div className="flex items-center gap-2">
-          {['bookings', 'customers', 'revenue', 'reviews'].map((t) => (
+          {['bookings', 'customers', 'revenue', 'reviews', 'memberships'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -144,6 +145,13 @@ export default function Admin() {
       {tab === 'reviews' && (
         <div className="px-6 md:px-16 py-10">
           <ReviewsManager />
+        </div>
+      )}
+
+      {/* Memberships Tab */}
+      {tab === 'memberships' && (
+        <div className="px-6 md:px-16 py-10">
+          <MembershipTab />
         </div>
       )}
     </div>

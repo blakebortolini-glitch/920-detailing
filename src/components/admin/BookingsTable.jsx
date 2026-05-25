@@ -8,6 +8,7 @@ const SERVICE_LABELS = {
   exterior: 'Exterior / Paint',
   ceramic: 'Ceramic Coating',
   full: 'Full Detail',
+  maintenance: 'Maintenance Detail',
   unsure: 'Needs Quote',
 };
 

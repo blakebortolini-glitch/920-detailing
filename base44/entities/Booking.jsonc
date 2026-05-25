@@ -29,6 +29,7 @@
         "exterior",
         "ceramic",
         "full",
+        "maintenance",
         "unsure"
       ],
       "description": "Service type requested"
@@ -75,6 +76,11 @@
     "calendarBlockEventId": {
       "type": "string",
       "description": "Google Calendar block event ID (all-day booked marker) for this booking"
+    },
+    "membership_flagged": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this maintenance detail booking was booked outside the 30-day eligibility window and needs admin review"
     }
   },
   "required": [

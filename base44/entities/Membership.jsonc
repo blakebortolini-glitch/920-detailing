@@ -1,0 +1,67 @@
+{
+  "name": "Membership",
+  "type": "object",
+  "properties": {
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email address linked to this membership"
+    },
+    "customer_name": {
+      "type": "string",
+      "description": "Customer full name"
+    },
+    "customer_phone": {
+      "type": "string",
+      "description": "Customer phone number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired"
+      ],
+      "default": "active",
+      "description": "Current membership status"
+    },
+    "eligibility_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the 30-day discount eligibility window began (date of last qualifying full detail)"
+    },
+    "qualifying_booking_id": {
+      "type": "string",
+      "description": "ID of the completed interior or exterior booking that activated this membership"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Admin notes about this membership"
+    }
+  },
+  "required": [
+    "customer_email",
+    "customer_name",
+    "eligibility_start_date"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

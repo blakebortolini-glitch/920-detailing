@@ -9,6 +9,7 @@ const services = [
   { value: 'full', label: 'Interior + Exterior Bundle', price: 'From $185' },
   { value: 'exterior', label: 'Exterior & Paint Correction', price: 'From $200' },
   { value: 'ceramic', label: 'Ceramic Coating', price: 'From $600' },
+  { value: 'maintenance', label: 'Maintenance Detail', price: 'Member Discount', badge: 'Members Only', note: 'Interior + exterior upkeep at a discounted rate for returning customers.' },
   { value: 'unsure', label: 'Not Sure — Need a Quote', price: '' },
 ];
 
@@ -140,12 +141,27 @@ export default function BookingForm() {
                 background: form.service === s.value ? '#0A0A0A' : '#FFFFFF',
               }}
             >
-              <p
-                className="font-inter font-semibold"
-                style={{ fontSize: '0.88rem', color: form.service === s.value ? '#FFF' : '#0A0A0A' }}
-              >
-                {s.label}
-              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p
+                  className="font-inter font-semibold"
+                  style={{ fontSize: '0.88rem', color: form.service === s.value ? '#FFF' : '#0A0A0A' }}
+                >
+                  {s.label}
+                </p>
+                {s.badge && (
+                  <span
+                    className="font-mono"
+                    style={{ fontSize: '0.55rem', letterSpacing: '0.1em', padding: '2px 6px', background: form.service === s.value ? 'rgba(255,255,255,0.15)' : '#EFF6FF', color: form.service === s.value ? '#FFF' : 'hsl(214, 89%, 52%)', border: `1px solid ${form.service === s.value ? 'rgba(255,255,255,0.2)' : '#BFDBFE'}` }}
+                  >
+                    {s.badge}
+                  </span>
+                )}
+              </div>
+              {s.note && (
+                <p className="mt-1" style={{ fontSize: '0.72rem', color: form.service === s.value ? 'rgba(255,255,255,0.6)' : '#767676', lineHeight: 1.4 }}>
+                  {s.note}
+                </p>
+              )}
               {s.price && (
                 <p className="font-mono mt-1" style={{ fontSize: '0.65rem', letterSpacing: '0.1em', color: form.service === s.value ? 'rgba(255,255,255,0.5)' : '#767676' }}>
                   {s.price}
