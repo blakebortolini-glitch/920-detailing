@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import BookingsTable from '@/components/admin/BookingsTable';
 import ReviewsManager from '@/components/admin/ReviewsManager';
+import CustomersTab from '@/components/admin/CustomersTab';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Admin() {
@@ -54,7 +55,7 @@ export default function Admin() {
         </div>
         {/* Tab switcher */}
         <div className="flex items-center gap-2">
-          {['bookings', 'reviews'].map((t) => (
+          {['bookings', 'customers', 'reviews'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -106,6 +107,19 @@ export default function Admin() {
             )}
           </div>
         </>
+      )}
+
+      {/* Customers Tab */}
+      {tab === 'customers' && (
+        <div className="px-6 md:px-16 py-10">
+          {loading ? (
+            <div className="flex items-center justify-center py-24">
+              <div className="w-6 h-6 border-2 border-border border-t-ink-black rounded-full animate-spin" />
+            </div>
+          ) : (
+            <CustomersTab bookings={bookings} />
+          )}
+        </div>
       )}
 
       {/* Reviews Tab */}
