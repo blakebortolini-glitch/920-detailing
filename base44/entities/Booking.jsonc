@@ -64,6 +64,10 @@
       "default": "new",
       "description": "Booking status"
     },
+    "total_price": {
+      "type": "number",
+      "description": "Final price charged for this booking in dollars"
+    },
     "calendarEventId": {
       "type": "string",
       "description": "Google Calendar event ID for this booking"

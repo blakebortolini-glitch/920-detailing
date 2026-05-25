@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
+import { base44 } from '@/api/base44Client';
 
 const SERVICE_LABELS = {
   interior: 'Interior',
@@ -29,8 +30,20 @@ function StatusBadge({ status }) {
   );
 }
 
-function BookingRow({ booking, onUpdateStatus }) {
+function BookingRow({ booking, onUpdateStatus, onUpdatePrice }) {
   const [open, setOpen] = useState(false);
+  const [priceInput, setPriceInput] = useState(booking.total_price != null ? String(booking.total_price) : '');
+  const [savingPrice, setSavingPrice] = useState(false);
+
+  const handleSavePrice = async (e) => {
+    e.stopPropagation();
+    const val = parseFloat(priceInput);
+    if (isNaN(val) || val < 0) return;
+    setSavingPrice(true);
+    await base44.entities.Booking.update(booking.id, { total_price: val });
+    onUpdatePrice(booking.id, val);
+    setSavingPrice(false);
+  };
 
   return (
     <>
@@ -63,6 +76,9 @@ function BookingRow({ booking, onUpdateStatus }) {
         </td>
         <td className="py-4 px-4">
           <StatusBadge status={booking.status} />
+        </td>
+        <td className="py-4 px-4 text-sm font-semibold text-ink-black">
+          {booking.total_price != null ? `$${booking.total_price.toLocaleString()}` : <span className="text-tech-grey text-xs">—</span>}
         </td>
         <td className="py-4 px-4 text-tech-grey text-xs">
           {booking.created_date ? format(new Date(booking.created_date), 'MMM d, yyyy') : '—'}
@@ -108,6 +124,32 @@ function BookingRow({ booking, onUpdateStatus }) {
                 )}
               </div>
 
+              {/* Price */}
+              <div>
+                <p className="small-caps-label mb-2">Price Charged</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-ink-black">$</span>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="0.00"
+                    value={priceInput}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => setPriceInput(e.target.value)}
+                    className="input-underline text-sm"
+                    style={{ maxWidth: 100 }}
+                  />
+                  <button
+                    onClick={handleSavePrice}
+                    disabled={savingPrice}
+                    className="small-caps-label px-3 py-2 border transition-colors"
+                    style={{ fontSize: '0.6rem', background: '#0A0A0A', color: '#FFF', borderColor: '#0A0A0A' }}
+                  >
+                    {savingPrice ? 'Saving…' : 'Save'}
+                  </button>
+                </div>
+              </div>
+
               {/* Actions */}
               <div>
                 <p className="small-caps-label mb-2">Update Status</p>
@@ -140,13 +182,13 @@ function BookingRow({ booking, onUpdateStatus }) {
   );
 }
 
-export default function BookingsTable({ bookings, onUpdateStatus }) {
+export default function BookingsTable({ bookings, onUpdateStatus, onUpdatePrice }) {
   return (
     <div className="border border-border overflow-x-auto">
       <table className="w-full">
         <thead>
           <tr className="border-b border-border bg-muted/30">
-            {['Customer', 'Vehicle', 'Service', 'Appointment', 'Status', 'Submitted', ''].map((h) => (
+            {['Customer', 'Vehicle', 'Service', 'Appointment', 'Status', 'Price', 'Submitted', ''].map((h) => (
               <th key={h} className="py-3 px-4 text-left small-caps-label text-tech-grey" style={{ fontSize: '0.6rem' }}>
                 {h}
               </th>
@@ -155,7 +197,7 @@ export default function BookingsTable({ bookings, onUpdateStatus }) {
         </thead>
         <tbody>
           {bookings.map((b) => (
-            <BookingRow key={b.id} booking={b} onUpdateStatus={onUpdateStatus} />
+            <BookingRow key={b.id} booking={b} onUpdateStatus={onUpdateStatus} onUpdatePrice={onUpdatePrice} />
           ))}
         </tbody>
       </table>

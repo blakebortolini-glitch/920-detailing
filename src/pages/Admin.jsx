@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import BookingsTable from '@/components/admin/BookingsTable';
 import ReviewsManager from '@/components/admin/ReviewsManager';
 import CustomersTab from '@/components/admin/CustomersTab';
+import RevenueTab from '@/components/admin/RevenueTab';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Admin() {
@@ -26,6 +27,10 @@ export default function Admin() {
   const updateStatus = async (id, status) => {
     await base44.entities.Booking.update(id, { status });
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, status } : b)));
+  };
+
+  const updatePrice = (id, total_price) => {
+    setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, total_price } : b)));
   };
 
   if (!user || user.role !== 'admin') {
@@ -55,7 +60,7 @@ export default function Admin() {
         </div>
         {/* Tab switcher */}
         <div className="flex items-center gap-2">
-          {['bookings', 'customers', 'reviews'].map((t) => (
+          {['bookings', 'customers', 'revenue', 'reviews'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -103,7 +108,7 @@ export default function Admin() {
                 <p className="small-caps-label text-tech-grey">No bookings found</p>
               </div>
             ) : (
-              <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} />
+              <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} onUpdatePrice={updatePrice} />
             )}
           </div>
         </>
@@ -118,6 +123,19 @@ export default function Admin() {
             </div>
           ) : (
             <CustomersTab bookings={bookings} />
+          )}
+        </div>
+      )}
+
+      {/* Revenue Tab */}
+      {tab === 'revenue' && (
+        <div className="px-6 md:px-16 py-10">
+          {loading ? (
+            <div className="flex items-center justify-center py-24">
+              <div className="w-6 h-6 border-2 border-border border-t-ink-black rounded-full animate-spin" />
+            </div>
+          ) : (
+            <RevenueTab bookings={bookings} />
           )}
         </div>
       )}
