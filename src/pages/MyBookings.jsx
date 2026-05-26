@@ -5,6 +5,7 @@ import Footer from '../components/Footer';
 import MyBookingCard from '../components/MyBookingCard';
 import RescheduleModal from '../components/RescheduleModal';
 import ChangeServiceModal from '../components/ChangeServiceModal';
+import AdminRescheduleModal from '../components/admin/AdminRescheduleModal';
 
 export default function MyBookings() {
   const [user, setUser] = useState(null);
@@ -117,11 +118,19 @@ export default function MyBookings() {
       </section>
 
       {rescheduleBooking && (
-        <RescheduleModal
-          booking={rescheduleBooking}
-          onClose={() => setRescheduleBooking(null)}
-          onSuccess={handleRescheduleSuccess}
-        />
+        user?.role === 'admin' ? (
+          <AdminRescheduleModal
+            booking={rescheduleBooking}
+            onClose={() => setRescheduleBooking(null)}
+            onSuccess={handleRescheduleSuccess}
+          />
+        ) : (
+          <RescheduleModal
+            booking={rescheduleBooking}
+            onClose={() => setRescheduleBooking(null)}
+            onSuccess={handleRescheduleSuccess}
+          />
+        )
       )}
 
       {changeServiceBooking && (
