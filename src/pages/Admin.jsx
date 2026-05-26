@@ -34,6 +34,10 @@ export default function Admin() {
     setBookings((prev) => prev.map((b) => (b.id === id ? { ...b, total_price } : b)));
   };
 
+  const updateBooking = (updated) => {
+    setBookings((prev) => prev.map((b) => (b.id === updated.id ? { ...b, ...updated } : b)));
+  };
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -109,7 +113,7 @@ export default function Admin() {
                 <p className="small-caps-label text-tech-grey">No bookings found</p>
               </div>
             ) : (
-              <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} onUpdatePrice={updatePrice} />
+              <BookingsTable bookings={filtered} onUpdateStatus={updateStatus} onUpdatePrice={updatePrice} onUpdateBooking={updateBooking} />
             )}
           </div>
         </>

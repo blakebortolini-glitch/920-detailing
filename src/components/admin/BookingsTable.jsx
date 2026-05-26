@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { base44 } from '@/api/base44Client';
+import AdminRescheduleModal from '@/components/admin/AdminRescheduleModal';
 
 const SERVICE_LABELS = {
   interior: 'Interior',
@@ -31,10 +32,11 @@ function StatusBadge({ status }) {
   );
 }
 
-function BookingRow({ booking, onUpdateStatus, onUpdatePrice }) {
+function BookingRow({ booking, onUpdateStatus, onUpdatePrice, onUpdateBooking }) {
   const [open, setOpen] = useState(false);
   const [priceInput, setPriceInput] = useState(booking.total_price != null ? String(booking.total_price) : '');
   const [savingPrice, setSavingPrice] = useState(false);
+  const [showReschedule, setShowReschedule] = useState(false);
 
   const handleSavePrice = async (e) => {
     e.stopPropagation();
@@ -173,17 +175,31 @@ function BookingRow({ booking, onUpdateStatus, onUpdatePrice }) {
                       Mark {s}
                     </button>
                   ))}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setShowReschedule(true); }}
+                    className="small-caps-label px-3 py-2 border transition-colors"
+                    style={{ fontSize: '0.6rem', background: 'transparent', color: '#1D4ED8', borderColor: '#1D4ED8' }}
+                  >
+                    Reschedule
+                  </button>
                 </div>
               </div>
             </div>
           </td>
         </tr>
       )}
+      {showReschedule && (
+        <AdminRescheduleModal
+          booking={booking}
+          onClose={() => setShowReschedule(false)}
+          onSuccess={(updated) => { onUpdateBooking(updated); setShowReschedule(false); }}
+        />
+      )}
     </>
   );
 }
 
-export default function BookingsTable({ bookings, onUpdateStatus, onUpdatePrice }) {
+export default function BookingsTable({ bookings, onUpdateStatus, onUpdatePrice, onUpdateBooking }) {
   return (
     <div className="border border-border overflow-x-auto">
       <table className="w-full">
@@ -198,7 +214,7 @@ export default function BookingsTable({ bookings, onUpdateStatus, onUpdatePrice 
         </thead>
         <tbody>
           {bookings.map((b) => (
-            <BookingRow key={b.id} booking={b} onUpdateStatus={onUpdateStatus} onUpdatePrice={onUpdatePrice} />
+            <BookingRow key={b.id} booking={b} onUpdateStatus={onUpdateStatus} onUpdatePrice={onUpdatePrice} onUpdateBooking={onUpdateBooking} />
           ))}
         </tbody>
       </table>
