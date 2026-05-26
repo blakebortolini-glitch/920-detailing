@@ -8,98 +8,111 @@ const SERVICE_LABELS = {
   unsure: 'Not Sure — Need a Quote',
 };
 
+const parseTime = (t) => {
+  const ampm = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (ampm) {
+    let h = parseInt(ampm[1]);
+    const m = ampm[2];
+    const period = ampm[3].toUpperCase();
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return `${String(h).padStart(2, '0')}:${m}`;
+  }
+  return t;
+};
+
+const buildTimes = (dateStr, timeStr, service) => {
+  const time24 = parseTime(timeStr || '09:00');
+  const startDateTime = `${dateStr}T${time24}:00`;
+  const durationHours = { interior: 4, exterior: 6, full: 8, ceramic: 10, unsure: 2 };
+  const dur = durationHours[service] || 4;
+  const [startHour, startMin] = time24.split(':').map(Number);
+  const totalEndMins = startHour * 60 + startMin + dur * 60;
+  const endHour = Math.floor(totalEndMins / 60) % 24;
+  const endMin = totalEndMins % 60;
+  const endDateTime = `${dateStr}T${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}:00`;
+  return { startDateTime, endDateTime };
+};
+
+const createBlockEvent = async (accessToken, dateStr, serviceLabel, bookingName) => {
+  const nextDay = new Date(dateStr + 'T12:00:00');
+  nextDay.setDate(nextDay.getDate() + 1);
+  const nextDayStr = nextDay.toISOString().split('T')[0];
+
+  const blockRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      summary: '🔒 FULLY BOOKED — No Availability',
+      description: `This day is fully booked. Appointment: ${serviceLabel} for ${bookingName}.`,
+      start: { date: dateStr },
+      end: { date: nextDayStr },
+      colorId: '11',
+      transparency: 'opaque',
+    }),
+  });
+
+  if (blockRes.ok) {
+    const blockCreated = await blockRes.json();
+    return blockCreated.id;
+  } else {
+    console.error('Google Calendar block event error:', await blockRes.text());
+    return null;
+  }
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-
     const payload = await req.json();
 
     const bookingId = payload.event?.entity_id || payload.bookingId;
 
-    // Use the data already in the automation payload if available (avoids fetch on deleted records)
     let booking = payload.data || null;
-
     if (!booking) {
-      let bookingRecord;
-      try {
-        bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
-      } catch (e) {
-        return Response.json({ success: false, reason: 'Booking not found' });
-      }
-      if (!bookingRecord) {
-        return Response.json({ success: false, reason: 'Booking not found' });
-      }
+      const bookingRecord = await base44.asServiceRole.entities.Booking.get(bookingId);
+      if (!bookingRecord) return Response.json({ success: false, reason: 'Booking not found' });
       booking = bookingRecord.data || bookingRecord;
     }
 
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('googlecalendar');
 
-    // --- CANCELLATION: delete calendar events and free up the slot ---
+    const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
+    const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
+    const dateStr = booking.date ? booking.date.split('T')[0] : null;
+
+    // --- CANCELLATION ---
     if (booking.status === 'cancelled') {
       const deleteEvent = async (eventId) => {
         if (!eventId) return;
         const res = await fetch(
           `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-          {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
+          { method: 'DELETE', headers: { Authorization: `Bearer ${accessToken}` } }
         );
         if (!res.ok && res.status !== 404) {
           console.error(`Failed to delete calendar event ${eventId}:`, await res.text());
         }
       };
-
-      await Promise.all([
-        deleteEvent(booking.calendarEventId),
-        deleteEvent(booking.calendarBlockEventId),
-      ]);
-
+      await Promise.all([deleteEvent(booking.calendarEventId), deleteEvent(booking.calendarBlockEventId)]);
       return Response.json({ success: true, action: 'deleted' });
     }
 
-    // --- SERVICE UPDATE: patch the existing calendar event with new service details ---
+    if (!dateStr) return Response.json({ success: false, reason: 'Booking has no date' });
+
+    const description = [
+      `Customer: ${booking.name}`,
+      `Phone: ${booking.phone}`,
+      booking.email ? `Email: ${booking.email}` : null,
+      `Vehicle: ${vehicleStr}`,
+      `Service: ${serviceLabel}`,
+      booking.add_ons && booking.add_ons.length > 0 ? `Add-Ons: ${booking.add_ons.join(', ')}` : null,
+      booking.notes ? `Notes: ${booking.notes}` : null,
+    ].filter(Boolean).join('\n');
+
+    const { startDateTime, endDateTime } = buildTimes(dateStr, booking.time, booking.service);
+
+    // --- UPDATE: patch existing calendar event ---
     if (booking.calendarEventId && payload.event?.type === 'update') {
-      const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-      const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
-      const rawDate = booking.date;
-      const dateStr = rawDate ? rawDate.split('T')[0] : null;
-      if (!dateStr) return Response.json({ success: false, reason: 'Booking has no date' });
-      const timeStr = booking.time || '09:00';
-
-      const parseTime = (t) => {
-        const ampm = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
-        if (ampm) {
-          let h = parseInt(ampm[1]);
-          const m = ampm[2];
-          const period = ampm[3].toUpperCase();
-          if (period === 'PM' && h !== 12) h += 12;
-          if (period === 'AM' && h === 12) h = 0;
-          return `${String(h).padStart(2, '0')}:${m}`;
-        }
-        return t;
-      };
-
-      const time24 = parseTime(timeStr);
-      const startDateTime = `${dateStr}T${time24}:00`;
-      const durationHours = { interior: 4, exterior: 6, full: 8, ceramic: 10, unsure: 2 };
-      const dur = durationHours[booking.service] || 4;
-      const [startHour, startMin] = time24.split(':').map(Number);
-      const totalEndMins = startHour * 60 + startMin + dur * 60;
-      const endHour = Math.floor(totalEndMins / 60) % 24;
-      const endMin = totalEndMins % 60;
-      const endDateTime = `${dateStr}T${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}:00`;
-
-      const description = [
-        `Customer: ${booking.name}`,
-        `Phone: ${booking.phone}`,
-        booking.email ? `Email: ${booking.email}` : null,
-        `Vehicle: ${vehicleStr}`,
-        `Service: ${serviceLabel}`,
-        booking.add_ons && booking.add_ons.length > 0 ? `Add-Ons: ${booking.add_ons.join(', ')}` : null,
-        booking.notes ? `Notes: ${booking.notes}` : null,
-      ].filter(Boolean).join('\n');
-
       const patchRes = await fetch(
         `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.calendarEventId}`,
         {
@@ -113,76 +126,30 @@ Deno.serve(async (req) => {
           }),
         }
       );
-
       if (!patchRes.ok) console.error('Calendar patch error:', await patchRes.text());
+
+      // If confirmed and no block event yet, create one now
+      if (booking.status === 'confirmed' && !booking.calendarBlockEventId) {
+        const blockEventId = await createBlockEvent(accessToken, dateStr, serviceLabel, booking.name);
+        if (blockEventId) {
+          await base44.asServiceRole.entities.Booking.update(bookingId, { calendarBlockEventId: blockEventId });
+        }
+      }
 
       return Response.json({ success: true, action: 'updated' });
     }
 
-    // --- CREATION: add events to Google Calendar ---
-    const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
-    const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
-
-    // Normalize date — handle both 'yyyy-MM-dd' and full ISO strings
-    const rawDate = booking.date;
-    const dateStr = rawDate ? rawDate.split('T')[0] : null;
-    if (!dateStr) {
-      return Response.json({ success: false, reason: 'Booking has no date' });
-    }
-    const timeStr = booking.time || '09:00';
-
-    const parseTime = (t) => {
-      const ampm = t.match(/(\d+):(\d+)\s*(AM|PM)/i);
-      if (ampm) {
-        let h = parseInt(ampm[1]);
-        const m = ampm[2];
-        const period = ampm[3].toUpperCase();
-        if (period === 'PM' && h !== 12) h += 12;
-        if (period === 'AM' && h === 12) h = 0;
-        return `${String(h).padStart(2, '0')}:${m}`;
-      }
-      return t;
-    };
-
-    const time24 = parseTime(timeStr);
-    const startDateTime = `${dateStr}T${time24}:00`;
-
-    const durationHours = { interior: 4, exterior: 6, full: 8, ceramic: 10, unsure: 2 };
-    const dur = durationHours[booking.service] || 4;
-    const [startHour, startMin] = time24.split(':').map(Number);
-    const totalStartMins = startHour * 60 + startMin;
-    const totalEndMins = totalStartMins + dur * 60;
-    const endHour = Math.floor(totalEndMins / 60) % 24;
-    const endMin = totalEndMins % 60;
-    const endTime24 = `${String(endHour).padStart(2, '0')}:${String(endMin).padStart(2, '0')}`;
-    const endDateTime = `${dateStr}T${endTime24}:00`;
-
-    const description = [
-      `Customer: ${booking.name}`,
-      `Phone: ${booking.phone}`,
-      booking.email ? `Email: ${booking.email}` : null,
-      `Vehicle: ${vehicleStr}`,
-      `Service: ${serviceLabel}`,
-      booking.add_ons && booking.add_ons.length > 0 ? `Add-Ons: ${booking.add_ons.join(', ')}` : null,
-      booking.notes ? `Notes: ${booking.notes}` : null,
-    ].filter(Boolean).join('\n');
-
-    // 1. Create the appointment event
-    const appointmentEvent = {
-      summary: `${serviceLabel} - ${booking.name} (${vehicleStr})`,
-      description,
-      start: { dateTime: startDateTime, timeZone: 'America/Chicago' },
-      end: { dateTime: endDateTime, timeZone: 'America/Chicago' },
-      colorId: '2',
-    };
-
+    // --- CREATION: new booking ---
     const calRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(appointmentEvent),
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        summary: `${serviceLabel} - ${booking.name} (${vehicleStr})`,
+        description,
+        start: { dateTime: startDateTime, timeZone: 'America/Chicago' },
+        end: { dateTime: endDateTime, timeZone: 'America/Chicago' },
+        colorId: '2',
+      }),
     });
 
     if (!calRes.ok) {
@@ -192,40 +159,8 @@ Deno.serve(async (req) => {
     }
 
     const created = await calRes.json();
+    const blockEventId = await createBlockEvent(accessToken, dateStr, serviceLabel, booking.name);
 
-    // 2. Create an all-day block event to mark the day as fully booked
-    // All-day events require end date to be the next day
-    const nextDay = new Date(dateStr + 'T12:00:00');
-    nextDay.setDate(nextDay.getDate() + 1);
-    const nextDayStr = nextDay.toISOString().split('T')[0];
-
-    const blockEvent = {
-      summary: '🔒 FULLY BOOKED — No Availability',
-      description: `This day is fully booked. Appointment: ${serviceLabel} for ${booking.name}.`,
-      start: { date: dateStr },
-      end: { date: nextDayStr },
-      colorId: '11',
-      transparency: 'opaque',
-    };
-
-    const blockRes = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(blockEvent),
-    });
-
-    let blockEventId = null;
-    if (blockRes.ok) {
-      const blockCreated = await blockRes.json();
-      blockEventId = blockCreated.id;
-    } else {
-      console.error('Google Calendar block event error:', await blockRes.text());
-    }
-
-    // 3. Save event IDs back to the booking for future cancellation
     await base44.asServiceRole.entities.Booking.update(bookingId, {
       calendarEventId: created.id,
       ...(blockEventId ? { calendarBlockEventId: blockEventId } : {}),
