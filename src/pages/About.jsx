@@ -1,7 +1,11 @@
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
 export default function About() {
   return (
     <div className="min-h-screen bg-background font-inter">
-      <div className="max-w-3xl mx-auto px-6 md:px-12 py-20">
+      <Navbar />
+      <div className="max-w-3xl mx-auto px-6 md:px-12 py-28 md:py-36">
         <p className="small-caps-label text-tech-grey mb-4">About Us</p>
         <h1
           className="font-inter font-black text-ink-black mb-10"
@@ -47,6 +51,7 @@ export default function About() {
           </a>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

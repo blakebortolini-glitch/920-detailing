@@ -66,9 +66,13 @@ export default function ReviewChat() {
     <div className="min-h-screen bg-background flex flex-col font-inter" style={{ maxHeight: '100dvh' }}>
       {/* Header */}
       <div className="border-b border-border px-6 py-4 flex items-center gap-3 bg-white">
-        <div className="w-9 h-9 bg-ink-black flex items-center justify-center">
-          <span className="font-mono text-white font-bold text-xs">920</span>
-        </div>
+        <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <img
+            src="https://media.base44.com/images/public/69fa3a1ac5d3dd52dfa6a6c6/2e6205b93_A9FC99FF-3B15-4B74-89A3-67498ADDFCF3.png"
+            alt="920 Detailing logo"
+            className="h-8 w-auto"
+          />
+        </a>
         <div>
           <p className="font-inter font-black text-ink-black text-sm" style={{ letterSpacing: '-0.02em' }}>Leave a Review</p>
           <p className="small-caps-label text-tech-grey" style={{ fontSize: '0.6rem' }}>920 Detailing · Kewaunee, Wisconsin</p>
