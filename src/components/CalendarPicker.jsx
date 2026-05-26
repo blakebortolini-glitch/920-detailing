@@ -13,7 +13,7 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
   const [bookedDates, setBookedDates] = useState(new Set());
 
   const MANUALLY_BLOCKED = new Set([
-    '2026-05-09', '2026-05-10', '2026-05-16',
+    '2026-05-09', '2026-05-10', '2026-05-11', '2026-05-16',
     '2026-06-01', '2026-06-02', '2026-06-03', '2026-06-04',
     '2026-06-05', '2026-06-06',
     '2026-06-09',
