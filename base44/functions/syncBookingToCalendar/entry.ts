@@ -34,6 +34,17 @@ const buildTimes = (dateStr, timeStr, service) => {
   return { startDateTime, endDateTime };
 };
 
+const deleteCalendarEvent = async (accessToken, eventId) => {
+  if (!eventId) return;
+  const res = await fetch(
+    `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
+    { method: 'DELETE', headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+  if (!res.ok && res.status !== 404) {
+    console.error(`Failed to delete calendar event ${eventId}:`, await res.text());
+  }
+};
+
 const createBlockEvent = async (accessToken, dateStr, serviceLabel, bookingName) => {
   const nextDay = new Date(dateStr + 'T12:00:00');
   nextDay.setDate(nextDay.getDate() + 1);
@@ -61,6 +72,16 @@ const createBlockEvent = async (accessToken, dateStr, serviceLabel, bookingName)
   }
 };
 
+// Check if any OTHER confirmed bookings exist on a given date (excluding the current booking)
+const hasOtherConfirmedBookingsOnDate = async (base44, dateStr, excludeBookingId) => {
+  const allConfirmed = await base44.asServiceRole.entities.Booking.filter({ status: 'confirmed' });
+  return allConfirmed.some((b) => {
+    if (b.id === excludeBookingId) return false;
+    const bDate = (b.date || b.data?.date || '').slice(0, 10);
+    return bDate === dateStr;
+  });
+};
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -79,25 +100,29 @@ Deno.serve(async (req) => {
 
     const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
     const vehicleStr = `${booking.year ? booking.year + ' ' : ''}${booking.vehicle}`;
-    const dateStr = booking.date ? booking.date.split('T')[0] : null;
+    const newDateStr = booking.date ? booking.date.split('T')[0] : null;
 
     // --- CANCELLATION ---
     if (booking.status === 'cancelled') {
-      const deleteEvent = async (eventId) => {
-        if (!eventId) return;
-        const res = await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-          { method: 'DELETE', headers: { Authorization: `Bearer ${accessToken}` } }
-        );
-        if (!res.ok && res.status !== 404) {
-          console.error(`Failed to delete calendar event ${eventId}:`, await res.text());
+      const oldDateStr = (payload.old_data?.date || '').slice(0, 10) || newDateStr;
+
+      await Promise.all([
+        deleteCalendarEvent(accessToken, booking.calendarEventId),
+        deleteCalendarEvent(accessToken, booking.calendarBlockEventId),
+      ]);
+
+      // Re-block old date if other confirmed bookings still exist there
+      if (oldDateStr) {
+        const othersOnOldDate = await hasOtherConfirmedBookingsOnDate(base44, oldDateStr, bookingId);
+        if (othersOnOldDate) {
+          await createBlockEvent(accessToken, oldDateStr, 'Other Appointment', 'another customer');
         }
-      };
-      await Promise.all([deleteEvent(booking.calendarEventId), deleteEvent(booking.calendarBlockEventId)]);
+      }
+
       return Response.json({ success: true, action: 'deleted' });
     }
 
-    if (!dateStr) return Response.json({ success: false, reason: 'Booking has no date' });
+    if (!newDateStr) return Response.json({ success: false, reason: 'Booking has no date' });
 
     const description = [
       `Customer: ${booking.name}`,
@@ -109,10 +134,14 @@ Deno.serve(async (req) => {
       booking.notes ? `Notes: ${booking.notes}` : null,
     ].filter(Boolean).join('\n');
 
-    const { startDateTime, endDateTime } = buildTimes(dateStr, booking.time, booking.service);
+    const { startDateTime, endDateTime } = buildTimes(newDateStr, booking.time, booking.service);
 
     // --- UPDATE: patch existing calendar event ---
     if (booking.calendarEventId && payload.event?.type === 'update') {
+      const oldDateStr = (payload.old_data?.date || '').slice(0, 10);
+      const dateChanged = oldDateStr && oldDateStr !== newDateStr;
+
+      // Patch the appointment event to the new date/time
       const patchRes = await fetch(
         `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.calendarEventId}`,
         {
@@ -128,9 +157,25 @@ Deno.serve(async (req) => {
       );
       if (!patchRes.ok) console.error('Calendar patch error:', await patchRes.text());
 
-      // If confirmed and no block event yet, create one now
-      if (booking.status === 'confirmed' && !booking.calendarBlockEventId) {
-        const blockEventId = await createBlockEvent(accessToken, dateStr, serviceLabel, booking.name);
+      if (dateChanged) {
+        // Remove the old block event for the old date
+        await deleteCalendarEvent(accessToken, booking.calendarBlockEventId);
+
+        // Check if other confirmed bookings remain on the OLD date
+        const othersOnOldDate = await hasOtherConfirmedBookingsOnDate(base44, oldDateStr, bookingId);
+        if (othersOnOldDate) {
+          // Re-create a generic block for the old date since others still have it booked
+          await createBlockEvent(accessToken, oldDateStr, 'Other Appointment', 'another customer');
+        }
+
+        // Create a new block event for the NEW date
+        const newBlockEventId = await createBlockEvent(accessToken, newDateStr, serviceLabel, booking.name);
+        await base44.asServiceRole.entities.Booking.update(bookingId, {
+          calendarBlockEventId: newBlockEventId || null,
+        });
+      } else if (booking.status === 'confirmed' && !booking.calendarBlockEventId) {
+        // Confirmed for the first time — create block
+        const blockEventId = await createBlockEvent(accessToken, newDateStr, serviceLabel, booking.name);
         if (blockEventId) {
           await base44.asServiceRole.entities.Booking.update(bookingId, { calendarBlockEventId: blockEventId });
         }
@@ -159,7 +204,7 @@ Deno.serve(async (req) => {
     }
 
     const created = await calRes.json();
-    const blockEventId = await createBlockEvent(accessToken, dateStr, serviceLabel, booking.name);
+    const blockEventId = await createBlockEvent(accessToken, newDateStr, serviceLabel, booking.name);
 
     await base44.asServiceRole.entities.Booking.update(bookingId, {
       calendarEventId: created.id,
