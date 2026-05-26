@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { Star, Check, X, Trash2, Plus } from 'lucide-react';
+import { Star, Check, X, Trash2, Plus, Upload, ImageIcon } from 'lucide-react';
 
 const SERVICE_OPTIONS = [
   { value: 'interior', label: 'Interior Detailing' },
@@ -33,7 +33,7 @@ function StarPicker({ value, onChange }) {
   );
 }
 
-const empty = { customer_name: '', rating: 5, review_text: '', service: '', vehicle: '', approved: true };
+const empty = { customer_name: '', rating: 5, review_text: '', service: '', vehicle: '', approved: true, photo_urls: [] };
 
 export default function ReviewsManager() {
   const [reviews, setReviews] = useState([]);
@@ -41,6 +41,8 @@ export default function ReviewsManager() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(empty);
   const [saving, setSaving] = useState(false);
+  const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const fileInputRef = useRef(null);
 
   const fetch = async () => {
     setLoading(true);
@@ -60,6 +62,22 @@ export default function ReviewsManager() {
     if (!window.confirm('Delete this review?')) return;
     await base44.entities.Review.delete(id);
     setReviews((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const handlePhotoUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    setUploadingPhotos(true);
+    const uploaded = await Promise.all(
+      files.map((file) => base44.integrations.Core.UploadFile({ file }))
+    );
+    const urls = uploaded.map((r) => r.file_url);
+    setForm((f) => ({ ...f, photo_urls: [...(f.photo_urls || []), ...urls] }));
+    setUploadingPhotos(false);
+  };
+
+  const removePhoto = (index) => {
+    setForm((f) => ({ ...f, photo_urls: f.photo_urls.filter((_, i) => i !== index) }));
   };
 
   const handleSubmit = async (e) => {
@@ -137,6 +155,47 @@ export default function ReviewsManager() {
                 onChange={(e) => setForm({ ...form, review_text: e.target.value })}
                 placeholder="Write the customer's review..."
               />
+            </div>
+            <div className="md:col-span-2">
+              <label className="small-caps-label text-tech-grey block mb-2">Photos</label>
+              <div className="flex flex-wrap gap-3 mb-3">
+                {(form.photo_urls || []).map((url, i) => (
+                  <div key={i} className="relative">
+                    <img src={url} alt="" className="w-20 h-20 object-cover border border-border" />
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(i)}
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-ink-black text-white flex items-center justify-center"
+                      style={{ fontSize: '0.6rem' }}
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingPhotos}
+                  className="w-20 h-20 border border-border border-dashed flex flex-col items-center justify-center gap-1 hover:bg-secondary transition-colors text-tech-grey"
+                >
+                  {uploadingPhotos ? (
+                    <div className="w-4 h-4 border-2 border-border border-t-ink-black rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <Upload size={14} />
+                      <span style={{ fontSize: '0.55rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Upload</span>
+                    </>
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                  onChange={handlePhotoUpload}
+                />
+              </div>
             </div>
             <div className="md:col-span-2 flex items-center gap-3">
               <label className="flex items-center gap-2 cursor-pointer">
