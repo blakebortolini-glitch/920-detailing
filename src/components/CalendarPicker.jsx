@@ -23,7 +23,7 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
   ]);
 
   useEffect(() => {
-    base44.entities.Booking.filter({ status: { $in: ['new', 'confirmed'] } }).then((bookings) => {
+    base44.entities.Booking.filter({ status: 'confirmed' }).then((bookings) => {
       const dates = new Set([
         ...MANUALLY_BLOCKED,
         ...bookings.map((b) => {
