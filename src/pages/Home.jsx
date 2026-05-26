@@ -17,9 +17,9 @@ export default function Home() {
       <Services />
       <WhyUs />
       <BeforeAfter />
+      <ReviewsCarousel />
       <Pricing />
       <PriceEstimator />
-      <ReviewsCarousel />
       <Footer />
       <AdvisorChat />
     </main>
