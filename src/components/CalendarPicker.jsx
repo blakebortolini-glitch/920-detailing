@@ -24,6 +24,7 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
     '2026-07-11', '2026-07-12',
     '2026-07-16',
     '2026-07-20', '2026-07-21',
+    '2026-07-23', '2026-07-24', '2026-07-25', '2026-07-26',
   ]);
 
   useEffect(() => {
