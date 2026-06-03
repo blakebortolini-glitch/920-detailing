@@ -14,6 +14,12 @@ import MyBookings from './pages/MyBookings';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import ReviewChat from './pages/ReviewChat';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -31,24 +37,32 @@ const AuthenticatedApp = () => {
   if (authError) {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
     }
   }
 
   // Render the main app
   return (
     <Routes>
+      {/* Auth routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+
+      {/* Public routes */}
       <Route path="/" element={<Home />} />
       <Route path="/booking" element={<Booking />} />
-      <Route path="/admin" element={<Admin />} />
       <Route path="/submit-review" element={<SubmitReview />} />
-      <Route path="/my-bookings" element={<MyBookings />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/review-chat" element={<ReviewChat />} />
+
+      {/* Protected routes — require sign-in */}
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
+      </Route>
+
       {/* Add your page Route elements here */}
       <Route path="*" element={<PageNotFound />} />
     </Routes>
