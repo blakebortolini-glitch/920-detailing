@@ -102,12 +102,6 @@
           "user_condition": {
             "role": "admin"
           }
-        },
-        {
-          "data.status": "confirmed"
-        },
-        {
-          "data.status": "completed"
         }
       ]
     },
