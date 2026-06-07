@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import CalendarPicker from '@/components/CalendarPicker';
 
 const TIME_SLOTS = [
   '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
@@ -31,7 +32,7 @@ export default function RescheduleModal({ booking, onClose, onSuccess }) {
       setLoading(false);
       onSuccess({ ...booking, date, time, status: 'new', notes: updated.notes });
     } catch (err) {
-      setError('Failed to reschedule. Please try again.');
+      setError(err?.message || 'Failed to reschedule. Please try again.');
       setLoading(false);
     }
   };
@@ -58,14 +59,7 @@ export default function RescheduleModal({ booking, onClose, onSuccess }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="small-caps-label block mb-2">New Date</label>
-            <input
-              type="date"
-              value={date}
-              min={new Date().toISOString().split('T')[0]}
-              onChange={e => setDate(e.target.value)}
-              className="input-underline"
-              required
-            />
+            <CalendarPicker selectedDate={date} onDateChange={setDate} />
           </div>
 
           <div>
