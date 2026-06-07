@@ -157,8 +157,9 @@ export default function SubmitReview() {
                 <select
                   name="service"
                   value={form.service}
-                  onChange={handleChange}
+                  onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
                   className="input-underline"
+                  style={{ cursor: 'pointer' }}
                 >
                   <option value="">Select a service…</option>
                   {Object.entries(serviceLabels).map(([val, label]) => (
