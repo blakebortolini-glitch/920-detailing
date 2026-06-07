@@ -105,7 +105,7 @@ export default function SubmitReview() {
                 <button
                   key={star}
                   type="button"
-                  onClick={() => setForm({ ...form, rating: star })}
+                  onClick={() => setForm((prev) => ({ ...prev, rating: star }))}
                   onMouseEnter={() => setHoveredStar(star)}
                   onMouseLeave={() => setHoveredStar(0)}
                   style={{ minHeight: 48, minWidth: 48 }}
