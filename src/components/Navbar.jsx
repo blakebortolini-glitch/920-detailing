@@ -62,6 +62,9 @@ export default function Navbar() {
               admin
             </Link>
           )}
+          <Link to="/register" className="small-caps-label text-ink-black hover:text-tech-grey transition-colors">
+            sign up
+          </Link>
           <Link to="/booking" className="btn-primary" style={{ padding: '10px 28px', fontSize: '0.7rem', background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }}>
             Book Now
           </Link>

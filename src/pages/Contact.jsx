@@ -1,7 +1,26 @@
+import { useState } from 'react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 export default function Contact() {
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const set = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    // Send email via mailto fallback — opens mail client with prefilled content
+    const subject = encodeURIComponent(`Contact Inquiry from ${form.name}`);
+    const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\n\nMessage:\n${form.message}`);
+    window.open(`mailto:920detailing@gmail.com?subject=${subject}&body=${body}`);
+    setSubmitting(false);
+    setSubmitted(true);
+  };
+
   return (
     <div className="min-h-screen bg-background font-inter">
       <Navbar />
