@@ -28,6 +28,7 @@ export default function RescheduleModal({ booking, onClose, onSuccess }) {
         status: 'new',
         notes: notes ? `[Reschedule request] ${notes}` : booking.notes,
       });
+      setLoading(false);
       onSuccess({ ...booking, date, time, status: 'new', notes: updated.notes });
     } catch (err) {
       setError('Failed to reschedule. Please try again.');
