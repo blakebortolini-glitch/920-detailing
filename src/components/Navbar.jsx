@@ -107,6 +107,9 @@ export default function Navbar() {
               admin panel
             </Link>
           )}
+          <Link to="/register" className="small-caps-label text-ink-black text-left" onClick={() => setMenuOpen(false)}>
+            sign up
+          </Link>
           <Link to="/booking" className="btn-primary w-full justify-center" style={{ background: 'hsl(214, 89%, 52%)', borderColor: 'hsl(214, 89%, 52%)' }} onClick={() => setMenuOpen(false)}>
             Book Now
           </Link>

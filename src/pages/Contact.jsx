@@ -88,6 +88,45 @@ export default function Contact() {
             </a>
           </div>
         </div>
+
+        {/* Contact Form */}
+        <div className="mt-16 border-t border-border pt-12">
+          <p className="small-caps-label text-tech-grey mb-4">Send a Message</p>
+          <h2 className="font-inter font-black text-ink-black mb-8" style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', letterSpacing: '-0.04em', lineHeight: 1 }}>
+            Have a Question?
+          </h2>
+
+          {submitted ? (
+            <div className="flex flex-col items-start gap-4 py-8">
+              <CheckCircle size={40} style={{ color: 'hsl(214, 89%, 52%)' }} />
+              <p className="font-inter font-black text-ink-black text-xl" style={{ letterSpacing: '-0.02em' }}>Message sent!</p>
+              <p className="text-tech-grey text-sm">We'll get back to you as soon as possible.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-6 max-w-lg">
+              <div>
+                <label className="small-caps-label block mb-2">Full Name *</label>
+                <input type="text" placeholder="Your name" value={form.name} onChange={set('name')} className="input-underline" required />
+              </div>
+              <div>
+                <label className="small-caps-label block mb-2">Email *</label>
+                <input type="email" placeholder="your@email.com" value={form.email} onChange={set('email')} className="input-underline" required />
+              </div>
+              <div>
+                <label className="small-caps-label block mb-2">Phone</label>
+                <input type="tel" placeholder="(920) —" value={form.phone} onChange={set('phone')} className="input-underline" />
+              </div>
+              <div>
+                <label className="small-caps-label block mb-2">Message *</label>
+                <textarea placeholder="How can we help you?" value={form.message} onChange={set('message')} rows={5} className="input-underline resize-none" required />
+              </div>
+              <button type="submit" className="btn-primary" disabled={submitting}>
+                {submitting ? 'Sending…' : 'Send Message'}
+                {!submitting && <ArrowRight size={16} />}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
       <Footer />
     </div>
