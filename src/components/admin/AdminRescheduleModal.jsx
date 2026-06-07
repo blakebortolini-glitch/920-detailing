@@ -19,19 +19,24 @@ export default function AdminRescheduleModal({ booking, onClose, onSuccess }) {
     setLoading(true);
     setError('');
 
-    const oldDate = booking.date;
+    try {
+      const oldDate = booking.date;
 
-    await base44.entities.Booking.update(booking.id, { date, time, status: 'confirmed' });
+      await base44.entities.Booking.update(booking.id, { date, time, status: 'confirmed' });
 
-    // Sync Google Calendar — pass old_data so the function knows the date changed
-    await base44.functions.invoke('syncBookingToCalendar', {
-      event: { type: 'update', entity_id: booking.id },
-      data: { ...booking, date, time, status: 'confirmed' },
-      old_data: { ...booking, date: oldDate },
-    });
+      // Sync Google Calendar — pass old_data so the function knows the date changed
+      await base44.functions.invoke('syncBookingToCalendar', {
+        event: { type: 'update', entity_id: booking.id },
+        data: { ...booking, date, time, status: 'confirmed' },
+        old_data: { ...booking, date: oldDate },
+      });
 
-    onSuccess({ ...booking, date, time, status: 'confirmed' });
-    onClose();
+      onSuccess({ ...booking, date, time, status: 'confirmed' });
+      onClose();
+    } catch (err) {
+      setError('Failed to reschedule. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (

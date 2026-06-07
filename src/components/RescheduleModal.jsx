@@ -21,13 +21,18 @@ export default function RescheduleModal({ booking, onClose, onSuccess }) {
     }
     setLoading(true);
     setError('');
-    const updated = await base44.entities.Booking.update(booking.id, {
-      date,
-      time,
-      status: 'new',
-      notes: notes ? `[Reschedule request] ${notes}` : booking.notes,
-    });
-    onSuccess({ ...booking, date, time, status: 'new', notes: updated.notes });
+    try {
+      const updated = await base44.entities.Booking.update(booking.id, {
+        date,
+        time,
+        status: 'new',
+        notes: notes ? `[Reschedule request] ${notes}` : booking.notes,
+      });
+      onSuccess({ ...booking, date, time, status: 'new', notes: updated.notes });
+    } catch (err) {
+      setError('Failed to reschedule. Please try again.');
+      setLoading(false);
+    }
   };
 
   return (
