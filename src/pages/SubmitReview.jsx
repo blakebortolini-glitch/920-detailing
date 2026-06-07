@@ -157,7 +157,10 @@ export default function SubmitReview() {
                 <select
                   name="service"
                   value={form.service}
-                  onChange={(e) => setForm((prev) => ({ ...prev, service: e.target.value }))}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setForm((prev) => ({ ...prev, service: val }));
+                  }}
                   className="input-underline"
                   style={{ cursor: 'pointer' }}
                 >
