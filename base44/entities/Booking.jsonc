@@ -99,9 +99,18 @@
           "data.email": "{{user.email}}"
         },
         {
+          "data.created_by_id": "{{user.id}}"
+        },
+        {
           "user_condition": {
             "role": "admin"
           }
+        },
+        {
+          "data.status": "confirmed"
+        },
+        {
+          "data.status": "completed"
         }
       ]
     },
@@ -109,6 +118,9 @@
       "$or": [
         {
           "data.email": "{{user.email}}"
+        },
+        {
+          "data.created_by_id": "{{user.id}}"
         },
         {
           "user_condition": {
