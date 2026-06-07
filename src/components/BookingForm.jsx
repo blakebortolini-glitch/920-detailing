@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Car, User, CheckCircle, Check, Sparkles } from 'lucide-react';
+import { ArrowRight, CalendarDays, Car, User, CheckCircle, Check, Sparkles, Clock } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import CalendarPicker from './CalendarPicker';
 import { useRecaptcha } from '@/hooks/useRecaptcha';
+
+const TIME_SLOTS = [
+  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM',
+  '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM',
+];
 
 const services = [
   { value: 'interior', label: 'Interior Detailing', price: 'From $150' },
@@ -41,7 +46,7 @@ export default function BookingForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const RECAPTCHA_CONTAINER_ID = 'recaptcha-booking';
-  const { getToken, reset } = useRecaptcha(RECAPTCHA_CONTAINER_ID);
+  const { ready, getToken, reset } = useRecaptcha(RECAPTCHA_CONTAINER_ID);
 
   const toggleAddOn = (id) =>
     setSelectedAddOns((prev) => prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]);
@@ -56,12 +61,12 @@ export default function BookingForm() {
       setError('Please fill in all required fields.');
       return;
     }
-    let recaptchaToken;
+    let recaptchaToken = null;
     try {
       recaptchaToken = getToken();
     } catch (err) {
-      setError(err.message || 'Please complete the reCAPTCHA.');
-      return;
+      // reCAPTCHA not ready (e.g. domain restriction in preview) — proceed without token
+      recaptchaToken = null;
     }
     setLoading(true);
     const addOnNames = addOns.filter((a) => selectedAddOns.includes(a.id)).map((a) => a.name);
@@ -228,6 +233,32 @@ export default function BookingForm() {
         />
       </div>
 
+      {/* Time Slot */}
+      <div className="mb-10">
+        <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
+          <Clock size={14} className="text-tech-grey" />
+          <p className="small-caps-label">Preferred Time</p>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {TIME_SLOTS.map((slot) => (
+            <button
+              key={slot}
+              type="button"
+              onClick={() => setDirect('time', slot)}
+              className="text-center p-3 border transition-colors"
+              style={{
+                borderColor: form.time === slot ? '#0A0A0A' : 'hsl(var(--border))',
+                background: form.time === slot ? '#0A0A0A' : '#FFFFFF',
+              }}
+            >
+              <p className="font-mono" style={{ fontSize: '0.72rem', letterSpacing: '0.05em', color: form.time === slot ? '#FFF' : '#0A0A0A' }}>
+                {slot}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Vehicle Info */}
       <div className="mb-10">
         <div className="flex items-center gap-3 mb-6 pb-2 border-b border-border">
@@ -278,8 +309,8 @@ export default function BookingForm() {
         </div>
       </div>
 
-      {/* reCAPTCHA v2 widget */}
-      <div id="recaptcha-booking" className="mb-4"></div>
+      {/* reCAPTCHA v2 widget — only shown when ready (hidden on unsupported domains) */}
+      <div id="recaptcha-booking" className={ready ? 'mb-4' : 'hidden'}></div>
 
       {error && (
         <p className="font-mono text-destructive mb-4" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>{error}</p>

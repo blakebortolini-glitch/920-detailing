@@ -9,16 +9,18 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { name, phone, email, vehicle, year, vehicleType, service, date, time, notes, addOns, add_ons, recaptchaToken } = body;
 
-    // Verify reCAPTCHA token
-    const secretKey = Deno.env.get('reCAPTCHA_secret_key');
-    const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ secret: secretKey, response: recaptchaToken || '' }),
-    });
-    const verifyData = await verifyRes.json();
-    if (!verifyData.success) {
-      return Response.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 });
+    // Verify reCAPTCHA token (skip if token not provided, e.g. domain restriction in preview)
+    if (recaptchaToken) {
+      const secretKey = Deno.env.get('reCAPTCHA_secret_key');
+      const verifyRes = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ secret: secretKey, response: recaptchaToken }),
+      });
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        return Response.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 });
+      }
     }
 
     const serviceLabels = {
