@@ -39,7 +39,7 @@ const tiers = [
     name: 'Exterior & Paint Correction',
     tagline: 'Surface restoration at micron level',
     startingAt: 300,
-    duration: '5–8 HRS',
+    duration: '1 DAY',
     includes: [
       'Foam cannon pre-wash',
       'Two-bucket hand wash',
@@ -58,6 +58,7 @@ const tiers = [
     duration: '1–2 DAYS',
     includes: [
       'Full paint correction included',
+      'Basic interior detail included',
       'IPA panel wipe prep',
       'Coating application',
       'Flash time management',

@@ -182,7 +182,7 @@ export default function Services() {
               num: '03',
               name: 'Exterior & Paint Correction',
               price: '$300',
-              duration: '5–8 hrs',
+              duration: '1 day',
               highlights: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
             },
             {
@@ -190,7 +190,7 @@ export default function Services() {
               name: 'Ceramic Coating',
               price: '$600',
               duration: '1–2 days',
-              highlights: ['Full paint correction incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '3–8 yr protection'],
+              highlights: ['Full paint correction incl.', 'Basic interior detail incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '3–8 yr protection'],
             },
           ].map((pkg) => (
             <div

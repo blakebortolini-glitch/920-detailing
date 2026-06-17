@@ -30,7 +30,7 @@ const services = [
     id: 'exterior',
     name: 'Exterior & Paint Correction',
     basePrice: 300,
-    duration: '5–8 hrs',
+    duration: '1 day',
     includes: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
   },
   {
@@ -38,7 +38,7 @@ const services = [
     name: 'Ceramic Coating',
     basePrice: 600,
     duration: '1–2 days',
-    includes: ['Full paint correction incl.', 'Panel-by-panel application', '24–48 hr cure protocol', '3–8 yr protection'],
+    includes: ['Full paint correction incl.', 'Basic interior detail incl.', 'Panel-by-panel application', '24–48 hr cure protocol', '3–8 yr protection'],
   },
 ];
 
