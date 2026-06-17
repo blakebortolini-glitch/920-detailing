@@ -181,7 +181,7 @@ export default function Services() {
             {
               num: '03',
               name: 'Exterior & Paint Correction',
-              price: '$200',
+              price: '$300',
               duration: '5–8 hrs',
               highlights: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
             },

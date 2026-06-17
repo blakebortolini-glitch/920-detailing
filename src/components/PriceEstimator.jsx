@@ -29,7 +29,7 @@ const services = [
   {
     id: 'exterior',
     name: 'Exterior & Paint Correction',
-    basePrice: 200,
+    basePrice: 300,
     duration: '5–8 hrs',
     includes: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
   },
