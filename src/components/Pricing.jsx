@@ -38,7 +38,7 @@ const tiers = [
     id: '03',
     name: 'Exterior & Paint Correction',
     tagline: 'Surface restoration at micron level',
-    startingAt: 200,
+    startingAt: 300,
     duration: '5–8 HRS',
     includes: [
       'Foam cannon pre-wash',
@@ -246,8 +246,9 @@ export default function Pricing() {
               </div>
               <span className="font-mono text-tech-grey" style={{ fontSize: '0.65rem', letterSpacing: '0.1em' }}>ADD TO ANY SERVICE</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border-t border-l border-border">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-0 border-t border-l border-border">
               {[
+                { name: 'Two-Step Paint Correction', price: '+$150', note: 'Add-on for Exterior & Paint Correction. Deeper polishing stage for heavily swirled or oxidized paint.' },
                 { name: 'Pet Hair Removal', price: '$25–$50', note: 'Price depends on severity and coverage area.' },
                 { name: 'Steam Cleaning', price: '$15', note: 'Full interior steam sanitization.' },
                 { name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Price depends on stain severity and area.' },
@@ -257,6 +258,7 @@ export default function Pricing() {
                   <p className="font-mono text-tech-grey mb-3" style={{ fontSize: '0.6rem', letterSpacing: '0.12em' }}>
                     /{String(i + 1).padStart(2, '0')}
                   </p>
+
                   <p className="font-inter font-bold text-ink-black mb-2" style={{ fontSize: '0.95rem', letterSpacing: '-0.01em' }}>
                     {addon.name}
                   </p>
