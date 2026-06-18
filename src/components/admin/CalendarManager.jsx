@@ -11,16 +11,26 @@ today.setHours(0, 0, 0, 0);
 
 export default function CalendarManager() {
   const [blockedDates, setBlockedDates] = useState([]); // array of { id, date, reason }
+  const [bookedDates, setBookedDates] = useState({}); // { 'yyyy-MM-dd': bookingInfo }
   const [viewMonth, setViewMonth] = useState(new Date());
   const [saving, setSaving] = useState(null); // date string being toggled
 
-  const fetchBlocked = async () => {
-    const data = await base44.entities.BlockedDate.list();
-    setBlockedDates(data);
+  const fetchData = async () => {
+    const [blocked, bookings] = await Promise.all([
+      base44.entities.BlockedDate.list(),
+      base44.entities.Booking.filter({ status: 'confirmed' }),
+    ]);
+    setBlockedDates(blocked);
+    const map = {};
+    bookings.forEach((b) => {
+      const d = (b.date || '').slice(0, 10);
+      if (d) map[d] = { name: b.name, service: b.service, time: b.time };
+    });
+    setBookedDates(map);
   };
 
   useEffect(() => {
-    fetchBlocked();
+    fetchData();
   }, []);
 
   const blockedSet = new Set(blockedDates.map((b) => b.date?.slice(0, 10)));
@@ -33,7 +43,7 @@ export default function CalendarManager() {
     } else {
       await base44.entities.BlockedDate.create({ date: dateStr });
     }
-    await fetchBlocked();
+    await fetchData();
     setSaving(null);
   };
 
@@ -107,7 +117,9 @@ export default function CalendarManager() {
                 const isPast = isBefore(date, today);
                 const inMonth = isSameMonth(date, viewMonth);
                 const isBlocked = blockedSet.has(dateStr);
+                const isBooked = !!bookedDates[dateStr];
                 const isSaving = saving === dateStr;
+                const booking = bookedDates[dateStr];
 
                 return (
                   <button
@@ -115,7 +127,7 @@ export default function CalendarManager() {
                     type="button"
                     onClick={() => !isPast && toggleDate(dateStr)}
                     disabled={isPast || isSaving}
-                    className="border-b border-r border-border aspect-square flex items-center justify-center transition-colors relative"
+                    className="border-b border-r border-border aspect-square flex flex-col items-center justify-center transition-colors relative"
                     style={{
                       fontSize: '0.85rem',
                       fontFamily: 'Inter, sans-serif',
@@ -124,6 +136,8 @@ export default function CalendarManager() {
                         ? '#F5F5F5'
                         : isBlocked
                         ? '#0A0A0A'
+                        : isBooked
+                        ? 'hsl(214, 89%, 97%)'
                         : 'transparent',
                       color: isSaving
                         ? '#CCCCCC'
@@ -136,12 +150,17 @@ export default function CalendarManager() {
                       minHeight: 44,
                     }}
                     aria-label={`${isBlocked ? 'Unblock' : 'Block'} ${format(date, 'MMMM d, yyyy')}`}
-                    title={isBlocked ? 'Click to unblock' : 'Click to block'}
+                    title={isBlocked ? 'Click to unblock' : isBooked ? `Booked: ${booking.name || ''} ${booking.time || ''}` : 'Click to block'}
                   >
                     {isSaving ? (
                       <div className="w-3 h-3 border border-border border-t-tech-grey rounded-full animate-spin" />
                     ) : (
-                      format(date, 'd')
+                      <>
+                        <span>{format(date, 'd')}</span>
+                        {isBooked && !isBlocked && (
+                          <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(214, 89%, 52%)' }} />
+                        )}
+                      </>
                     )}
                   </button>
                 );
@@ -151,7 +170,7 @@ export default function CalendarManager() {
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-6 mt-4">
+        <div className="flex items-center gap-6 mt-4 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 border border-border bg-white" />
             <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>OPEN</span>
@@ -159,6 +178,12 @@ export default function CalendarManager() {
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-ink-black" />
             <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>BLOCKED</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 relative border border-border" style={{ background: 'hsl(214, 89%, 97%)' }}>
+              <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(214, 89%, 52%)' }} />
+            </div>
+            <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>BOOKED</span>
           </div>
         </div>
       </div>
