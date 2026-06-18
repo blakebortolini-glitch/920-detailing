@@ -12,30 +12,16 @@ today.setHours(0, 0, 0, 0);
 export default function CalendarPicker({ selectedDate, onDateChange }) {
   const [bookedDates, setBookedDates] = useState(new Set());
 
-  const MANUALLY_BLOCKED = new Set([
-    '2026-05-09', '2026-05-10', '2026-05-11', '2026-05-16',
-    '2026-06-01', '2026-06-02', '2026-06-03', '2026-06-04',
-    '2026-06-05', '2026-06-06',
-    '2026-06-09',
-    '2026-06-11', '2026-06-12', '2026-06-13', '2026-06-14',
-    '2026-06-16', '2026-06-17', '2026-06-18',
-    '2026-06-20', '2026-06-21', '2026-06-24', '2026-06-27', '2026-06-29',
-    '2026-07-02', '2026-07-03', '2026-07-04', '2026-07-05',
-    '2026-07-11', '2026-07-12',
-    '2026-07-16',
-    '2026-07-18',
-    '2026-07-20', '2026-07-21', '2026-07-22',
-    '2026-07-23', '2026-07-24', '2026-07-25', '2026-07-26',
-  ]);
-
   useEffect(() => {
-    base44.entities.Booking.filter({ status: 'confirmed' }).then((bookings) => {
+    Promise.all([
+      base44.entities.Booking.filter({ status: 'confirmed' }),
+      base44.entities.BlockedDate.list(),
+    ]).then(([bookings, blocked]) => {
       const dates = new Set([
-        ...MANUALLY_BLOCKED,
+        ...blocked.map((b) => b.date?.slice(0, 10)).filter(Boolean),
         ...bookings.map((b) => {
           const raw = b.date || b.data?.date;
           if (!raw) return null;
-          // Slice to 'yyyy-MM-dd' directly — avoids UTC-to-local timezone shift from new Date()
           return raw.slice(0, 10);
         }).filter(Boolean),
       ]);

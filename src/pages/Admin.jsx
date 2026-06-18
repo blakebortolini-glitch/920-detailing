@@ -5,6 +5,7 @@ import ReviewsManager from '@/components/admin/ReviewsManager';
 import CustomersTab from '@/components/admin/CustomersTab';
 import RevenueTab from '@/components/admin/RevenueTab';
 import MembershipTab from '@/components/admin/MembershipTab';
+import CalendarManager from '@/components/admin/CalendarManager';
 import { useAuth } from '@/lib/AuthContext';
 
 export default function Admin() {
@@ -65,7 +66,7 @@ export default function Admin() {
         </div>
         {/* Tab switcher */}
         <div className="flex items-center gap-2">
-          {['bookings', 'customers', 'revenue', 'reviews', 'memberships'].map((t) => (
+          {['bookings', 'customers', 'revenue', 'reviews', 'memberships', 'calendar'].map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -156,6 +157,17 @@ export default function Admin() {
       {tab === 'memberships' && (
         <div className="px-6 md:px-16 py-10">
           <MembershipTab />
+        </div>
+      )}
+
+      {/* Calendar Tab */}
+      {tab === 'calendar' && (
+        <div className="px-6 md:px-16 py-10">
+          <div className="mb-8">
+            <p className="small-caps-label text-tech-grey mb-1">Availability</p>
+            <h2 className="font-inter font-black text-ink-black text-2xl" style={{ letterSpacing: '-0.03em' }}>Calendar Management</h2>
+          </div>
+          <CalendarManager />
         </div>
       )}
     </div>
