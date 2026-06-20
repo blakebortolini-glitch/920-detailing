@@ -39,8 +39,7 @@ Deno.serve(async (req) => {
         ``,
         body,
       ].join('\r\n');
-      const utf8Bytes = new TextEncoder().encode(mime);
-      const encoded = btoa(String.fromCharCode(...utf8Bytes))
+      const encoded = btoa(unescape(encodeURIComponent(mime)))
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
       const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
         method: 'POST',
