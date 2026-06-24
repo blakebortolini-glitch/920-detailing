@@ -10,29 +10,32 @@ const today = new Date();
 today.setHours(0, 0, 0, 0);
 
 export default function CalendarPicker({ selectedDate, onDateChange }) {
-  const [bookedDates, setBookedDates] = useState(new Set());
+  const [blockedSet, setBlockedSet] = useState(new Set());
+  const [bookedMap, setBookedMap] = useState({}); // { 'yyyy-MM-dd': { name, time } }
 
   useEffect(() => {
     Promise.all([
       base44.entities.Booking.filter({ status: 'confirmed' }),
       base44.entities.BlockedDate.list(),
     ]).then(([bookings, blocked]) => {
-      const dates = new Set([
-        ...blocked.map((b) => b.date?.slice(0, 10)).filter(Boolean),
-        ...bookings.map((b) => {
-          const raw = b.date || b.data?.date;
-          if (!raw) return null;
-          return raw.slice(0, 10);
-        }).filter(Boolean),
-      ]);
-      setBookedDates(dates);
+      setBlockedSet(new Set(blocked.map((b) => b.date?.slice(0, 10)).filter(Boolean)));
+      const map = {};
+      bookings.forEach((b) => {
+        const raw = b.date || b.data?.date;
+        if (!raw) return;
+        const d = raw.slice(0, 10);
+        if (d) map[d] = { name: b.name, time: b.time };
+      });
+      setBookedMap(map);
     });
   }, []);
 
   // May 2026: only Sat/Sun open; Jun–Aug 2026: Mon–Sun open; all other months: Mon–Sat open, Sun closed
   const isDisabled = (date) => {
     if (isBefore(date, today)) return true;
-    if (bookedDates.has(format(date, 'yyyy-MM-dd'))) return true;
+    const dateStr = format(date, 'yyyy-MM-dd');
+    if (blockedSet.has(dateStr)) return true;
+    if (bookedMap[dateStr]) return true;
     const year = date.getFullYear();
     const month = date.getMonth();
     const isMay2026 = year === 2026 && month === 4;
@@ -41,7 +44,7 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
     if (isJunToAug2026) return false; // all days open
     return date.getDay() === 0;
   };
-  const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate) : new Date());
+  const [viewMonth, setViewMonth] = useState(selectedDate ? new Date(selectedDate + 'T12:00:00') : new Date());
 
   const monthStart = startOfMonth(viewMonth);
   const monthEnd = endOfMonth(viewMonth);
@@ -112,6 +115,10 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
               const isSelected = parsedSelected && isSameDay(date, parsedSelected);
               const isToday = isSameDay(date, today);
               const inMonth = isSameMonth(date, viewMonth);
+              const dateStr = format(date, 'yyyy-MM-dd');
+              const isBlocked = blockedSet.has(dateStr);
+              const isBooked = !!bookedMap[dateStr];
+              const booking = bookedMap[dateStr];
 
               return (
                 <button
@@ -119,13 +126,21 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
                   type="button"
                   onClick={() => handleDayClick(date)}
                   disabled={disabled}
-                  className="border-b border-r border-border aspect-square flex items-center justify-center transition-colors"
+                  className="border-b border-r border-border aspect-square flex flex-col items-center justify-center transition-colors relative"
                   style={{
                     fontSize: '0.85rem',
                     fontFamily: 'Inter, sans-serif',
                     fontWeight: isSelected ? 700 : 400,
-                    background: isSelected ? 'hsl(214, 89%, 52%)' : 'transparent',
+                    background: isSelected
+                      ? 'hsl(214, 89%, 52%)'
+                      : isBlocked
+                      ? '#0A0A0A'
+                      : isBooked
+                      ? 'hsl(214, 89%, 97%)'
+                      : 'transparent',
                     color: isSelected
+                      ? '#FFFFFF'
+                      : isBlocked
                       ? '#FFFFFF'
                       : disabled
                       ? '#CCCCCC'
@@ -139,13 +154,35 @@ export default function CalendarPicker({ selectedDate, onDateChange }) {
                   }}
                   aria-label={format(date, 'MMMM d, yyyy')}
                   aria-pressed={isSelected}
+                  title={isBlocked ? 'Unavailable' : isBooked ? `Booked: ${booking.name || ''} ${booking.time || ''}` : ''}
                 >
-                  {format(date, 'd')}
+                  <span>{format(date, 'd')}</span>
+                  {isBooked && !isBlocked && !isSelected && (
+                    <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(214, 89%, 52%)' }} />
+                  )}
                 </button>
               );
             })}
           </div>
         ))}
+      </div>
+
+      {/* Legend */}
+      <div className="flex items-center gap-6 mt-4 flex-wrap">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 border border-border bg-white" />
+          <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>OPEN</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-ink-black" />
+          <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>BLOCKED</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 relative border border-border" style={{ background: 'hsl(214, 89%, 97%)' }}>
+            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full" style={{ background: 'hsl(214, 89%, 52%)' }} />
+          </div>
+          <span className="font-mono text-tech-grey" style={{ fontSize: '0.6rem', letterSpacing: '0.08em' }}>BOOKED</span>
+        </div>
       </div>
 
       {/* Confirmation of selected date */}
