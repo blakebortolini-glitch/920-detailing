@@ -27,9 +27,14 @@ If everything above looks clean (no garbled text like Ã¢Â€Â), the encoding
 Kewaunee, Wisconsin
 (920) 255-3123`;
 
+    const subjectBytes = new TextEncoder().encode(subject);
+    let subjectBin = '';
+    for (let i = 0; i < subjectBytes.length; i++) subjectBin += String.fromCharCode(subjectBytes[i]);
+    const encodedSubject = `=?UTF-8?B?${btoa(subjectBin)}?=`;
+
     const mime = [
       `To: ${to}`,
-      `Subject: ${subject}`,
+      `Subject: ${encodedSubject}`,
       `Content-Type: text/plain; charset=utf-8`,
       `MIME-Version: 1.0`,
       ``,

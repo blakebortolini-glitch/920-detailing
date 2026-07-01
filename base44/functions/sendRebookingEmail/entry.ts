@@ -31,9 +31,13 @@ Deno.serve(async (req) => {
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 
     const sendEmail = async (to, subject, body) => {
+      const subjBytes = new TextEncoder().encode(subject);
+      let subjBin = '';
+      for (let i = 0; i < subjBytes.length; i++) subjBin += String.fromCharCode(subjBytes[i]);
+      const encodedSubject = `=?UTF-8?B?${btoa(subjBin)}?=`;
       const mime = [
         `To: ${to}`,
-        `Subject: ${subject}`,
+        `Subject: ${encodedSubject}`,
         `Content-Type: text/plain; charset=utf-8`,
         `MIME-Version: 1.0`,
         ``,

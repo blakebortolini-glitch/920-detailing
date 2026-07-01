@@ -131,9 +131,13 @@ Kewaunee, Wisconsin`;
     const { accessToken } = await base44.asServiceRole.connectors.getConnection('gmail');
 
     const sendEmail = async (to, emailSubject, emailBody) => {
+      const subjBytes = new TextEncoder().encode(emailSubject);
+      let subjBin = '';
+      for (let i = 0; i < subjBytes.length; i++) subjBin += String.fromCharCode(subjBytes[i]);
+      const encodedSubject = `=?UTF-8?B?${btoa(subjBin)}?=`;
       const mime = [
         `To: ${to}`,
-        `Subject: ${emailSubject}`,
+        `Subject: ${encodedSubject}`,
         `Content-Type: text/plain; charset=utf-8`,
         `MIME-Version: 1.0`,
         ``,

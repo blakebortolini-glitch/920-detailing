@@ -70,9 +70,13 @@ Deno.serve(async (req) => {
         notes ? `Notes: ${notes}` : null,
       ].filter(Boolean).join('\n');
 
+      const subjBytes = new TextEncoder().encode(emailSubject);
+      let subjBin = '';
+      for (let i = 0; i < subjBytes.length; i++) subjBin += String.fromCharCode(subjBytes[i]);
+      const encodedSubject = `=?UTF-8?B?${btoa(subjBin)}?=`;
       const mimeMessage = [
         `To: ${ownerEmail}`,
-        `Subject: ${emailSubject}`,
+        `Subject: ${encodedSubject}`,
         `Content-Type: text/plain; charset=utf-8`,
         `MIME-Version: 1.0`,
         ``,
