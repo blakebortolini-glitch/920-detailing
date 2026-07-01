@@ -39,7 +39,12 @@ Deno.serve(async (req) => {
         ``,
         body,
       ].join('\r\n');
-      const encoded = btoa(unescape(encodeURIComponent(mime)))
+      const mimeBytes = new TextEncoder().encode(mime);
+      let binaryStr = '';
+      for (let i = 0; i < mimeBytes.length; i++) {
+        binaryStr += String.fromCharCode(mimeBytes[i]);
+      }
+      const encoded = btoa(binaryStr)
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
       const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
         method: 'POST',

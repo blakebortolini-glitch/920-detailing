@@ -39,7 +39,12 @@ Deno.serve(async (req) => {
         ``,
         body,
       ].join('\r\n');
-      const encoded = btoa(unescape(encodeURIComponent(mime)))
+      const mimeBytes = new TextEncoder().encode(mime);
+      let binaryStr = '';
+      for (let i = 0; i < mimeBytes.length; i++) {
+        binaryStr += String.fromCharCode(mimeBytes[i]);
+      }
+      const encoded = btoa(binaryStr)
         .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
       const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
         method: 'POST',
@@ -63,13 +68,8 @@ We hope your ${serviceLabel} went exactly as expected — or better!
 
 Your ${vehicleStr} is looking sharp, and we'd love to hear what you thought. It only takes a minute and it means a lot to a small local business like ours.
 
-You have two easy ways to leave a review:
-
-1. Chat with our review assistant (quickest):
-   https://920detailing.com/review-chat?name=${encodeURIComponent(booking.name)}&vehicle=${encodeURIComponent(vehicleStr)}&service=${encodeURIComponent(booking.service)}
-
-2. Fill out the review form:
-   https://920detailing.com/submit-review
+Leave us a review here:
+https://dot.cards/920detailing
 
 Thanks again for choosing 920 Detailing — we appreciate your trust and look forward to seeing you next time!
 
