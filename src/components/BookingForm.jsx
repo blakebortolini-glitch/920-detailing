@@ -10,7 +10,7 @@ const TIME_SLOTS = [
 ];
 
 const services = [
-  { value: 'interior', label: 'Interior Detailing', price: 'From $150' },
+  { value: 'interior', label: 'Interior Detailing', price: 'From $200' },
   { value: 'full', label: 'Interior + Exterior Bundle', price: 'From $185' },
   { value: 'exterior', label: 'Exterior & Paint Correction', price: 'From $200' },
   { value: 'ceramic', label: 'Ceramic Coating', price: 'From $600' },
@@ -28,9 +28,8 @@ const vehicleTypes = [
 
 const addOns = [
   { id: 'pet_hair', name: 'Pet Hair Removal', price: '$25–$50', note: 'Depends on severity' },
-  { id: 'steam', name: 'Steam Cleaning', price: '$15', note: 'Full interior sanitization' },
   { id: 'stain', name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Depends on stain severity' },
-  { id: 'odor', name: 'Odor Elimination', price: '$10–$40', note: 'Depends on odor severity' },
+  { id: 'odor', name: 'Odor Elimination', price: '$25–$60', note: 'Depends on odor severity' },
 ];
 
 

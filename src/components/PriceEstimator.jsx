@@ -14,16 +14,16 @@ const services = [
   {
     id: 'interior',
     name: 'Interior Detailing',
-    basePrice: 150,
+    basePrice: 200,
     duration: '3–6 hrs',
-    includes: ['Deep vacuum & air purge', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning'],
+    includes: ['Deep vacuum & air purge', 'Steam cleaning & sanitization', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning'],
   },
   {
     id: 'full',
     name: 'Interior + Exterior Bundle',
     basePrice: 185,
     duration: '6–10 hrs',
-    includes: ['Full interior refresh', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
+    includes: ['Full interior refresh', 'Steam cleaning & sanitization', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
     featured: true,
   },
   {
@@ -31,22 +31,21 @@ const services = [
     name: 'Exterior & Paint Correction',
     basePrice: 300,
     duration: '1 day',
-    includes: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
+    includes: ['Steam cleaning & sanitization', 'Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
   },
   {
     id: 'ceramic',
     name: 'Ceramic Coating',
     basePrice: 600,
     duration: '1–2 days',
-    includes: ['Full paint correction incl.', 'Basic interior detail incl.', 'Panel-by-panel application', '24–48 hr cure protocol', '3–8 yr protection'],
+    includes: ['Full paint correction incl.', 'Basic interior detail incl.', 'Steam cleaning & sanitization', 'Panel-by-panel application', '24–48 hr cure protocol', '3–8 yr protection'],
   },
 ];
 
 const addOns = [
   { id: 'pet_hair', name: 'Pet Hair Removal', priceLow: 25, priceHigh: 50, note: 'Depends on severity' },
-  { id: 'steam', name: 'Steam Cleaning', priceLow: 15, priceHigh: 15, note: 'Full interior sanitization' },
   { id: 'stain', name: 'Stain Removal & Carpet Extraction', priceLow: 15, priceHigh: 50, note: 'Depends on stain severity' },
-  { id: 'odor', name: 'Odor Elimination', priceLow: 10, priceHigh: 40, note: 'Depends on odor severity' },
+  { id: 'odor', name: 'Odor Elimination', priceLow: 25, priceHigh: 60, note: 'Depends on odor severity' },
 ];
 
 export default function PriceEstimator() {

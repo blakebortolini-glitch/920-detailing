@@ -153,16 +153,16 @@ export default function Services() {
             {
               num: '01',
               name: 'Interior Detail',
-              price: '$150',
+              price: '$200',
               duration: '3–6 hrs',
-              highlights: ['Deep vacuum & air purge', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning & protection'],
+              highlights: ['Deep vacuum & air purge', 'Steam cleaning & sanitization', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning & protection'],
             },
             {
               num: '02',
               name: 'Interior + Exterior Bundle',
               price: '$185',
               duration: '6–10 hrs',
-              highlights: ['Full interior refresh', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
+              highlights: ['Full interior refresh', 'Steam cleaning & sanitization', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
               featured: true,
             },
             {
@@ -170,14 +170,14 @@ export default function Services() {
               name: 'Exterior & Paint Correction',
               price: '$300',
               duration: '1 day',
-              highlights: ['Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
+              highlights: ['Steam cleaning & sanitization', 'Clay bar treatment', 'Paint depth measurement', 'Stage 1 / Stage 2 polish', 'IPA panel wipe finish', '70–95% defect removal'],
             },
             {
               num: '04',
               name: 'Ceramic Coating',
               price: '$600',
               duration: '1–2 days',
-              highlights: ['Full paint correction incl.', 'Basic interior detail incl.', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '3–8 yr protection'],
+              highlights: ['Full paint correction incl.', 'Basic interior detail incl.', 'Steam cleaning & sanitization', 'Panel-by-panel application', 'IR cure option', '24–48 hr cure protocol', '3–8 yr protection'],
             },
           ].map((pkg) => (
             <div

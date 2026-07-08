@@ -6,11 +6,12 @@ const tiers = [
     id: '01',
     name: 'Interior Detail',
     tagline: 'Complete cabin restoration',
-    startingAt: 150,
+    startingAt: 200,
     duration: '3–5 HRS',
     includes: [
       'Deep vacuum & air purge',
       'Carpet & seat refresh/cleaning',
+      'Steam cleaning & sanitization',
       'Surface decontamination',
       'Interior glass polish',
       'Conditioning & UV protection',
@@ -28,6 +29,7 @@ const tiers = [
     includes: [
       'Full interior refresh & clean',
       'Carpet & seat cleaning',
+      'Steam cleaning & sanitization',
       'Foam cannon pre-wash',
       'Two-bucket hand wash',
       'Iron & tar decontamination',
@@ -43,6 +45,7 @@ const tiers = [
     includes: [
       'Foam cannon pre-wash',
       'Two-bucket hand wash',
+      'Steam cleaning & sanitization',
       'Iron & tar decontamination',
       'Clay bar treatment',
       'Paint gauge measurement',
@@ -59,6 +62,7 @@ const tiers = [
     includes: [
       'Full paint correction included',
       'Basic interior detail included',
+      'Steam cleaning & sanitization',
       'IPA panel wipe prep',
       'Coating application',
       'Flash time management',
@@ -251,9 +255,8 @@ export default function Pricing() {
               {[
                 { name: 'Two-Step Paint Correction', price: '+$150', note: 'Add-on for Exterior & Paint Correction. Deeper polishing stage for heavily swirled or oxidized paint.' },
                 { name: 'Pet Hair Removal', price: '$25–$50', note: 'Price depends on severity and coverage area.' },
-                { name: 'Steam Cleaning', price: '$15', note: 'Full interior steam sanitization.' },
                 { name: 'Stain Removal & Carpet Extraction', price: '$15–$50', note: 'Price depends on stain severity and area.' },
-                { name: 'Odor Elimination', price: '$10–$40', note: 'Price depends on severity of odor.' },
+                { name: 'Odor Elimination', price: '$25–$60', note: 'Price depends on severity of odor.' },
               ].map((addon, i) => (
                 <div key={i} className="border-b border-r border-border p-6">
                   <p className="font-mono text-tech-grey mb-3" style={{ fontSize: '0.6rem', letterSpacing: '0.12em' }}>
