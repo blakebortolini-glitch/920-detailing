@@ -6,7 +6,7 @@ const tiers = [
     id: '01',
     name: 'Interior Detail',
     tagline: 'Complete cabin restoration',
-    startingAt: 200,
+    startingAt: 165,
     duration: '3–5 HRS',
     includes: [
       'Deep vacuum & air purge',
@@ -23,7 +23,7 @@ const tiers = [
     id: '02',
     name: 'Interior + Exterior Bundle',
     tagline: 'Most popular, best value',
-    startingAt: 185,
+    startingAt: 200,
     duration: '6–10 HRS',
     featured: true,
     includes: [

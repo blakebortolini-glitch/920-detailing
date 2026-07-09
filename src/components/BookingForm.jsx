@@ -10,8 +10,8 @@ const TIME_SLOTS = [
 ];
 
 const services = [
-  { value: 'interior', label: 'Interior Detailing', price: 'From $200' },
-  { value: 'full', label: 'Interior + Exterior Bundle', price: 'From $185' },
+  { value: 'interior', label: 'Interior Detailing', price: 'From $165' },
+  { value: 'full', label: 'Interior + Exterior Bundle', price: 'From $200' },
   { value: 'exterior', label: 'Exterior & Paint Correction', price: 'From $200' },
   { value: 'ceramic', label: 'Ceramic Coating', price: 'From $600' },
   { value: 'maintenance', label: 'Maintenance Detail', price: 'Member Discount', badge: 'Members Only', note: 'Interior + exterior upkeep at a discounted rate for returning customers.' },

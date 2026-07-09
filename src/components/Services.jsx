@@ -153,14 +153,14 @@ export default function Services() {
             {
               num: '01',
               name: 'Interior Detail',
-              price: '$200',
+              price: '$165',
               duration: '3–6 hrs',
               highlights: ['Deep vacuum & air purge', 'Steam cleaning & sanitization', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning & protection'],
             },
             {
               num: '02',
               name: 'Interior + Exterior Bundle',
-              price: '$185',
+              price: '$200',
               duration: '6–10 hrs',
               highlights: ['Full interior refresh', 'Steam cleaning & sanitization', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
               featured: true,

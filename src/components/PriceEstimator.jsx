@@ -14,14 +14,14 @@ const services = [
   {
     id: 'interior',
     name: 'Interior Detailing',
-    basePrice: 200,
+    basePrice: 165,
     duration: '3–6 hrs',
     includes: ['Deep vacuum & air purge', 'Steam cleaning & sanitization', 'Fabric / leather extraction', 'Surface decontamination', 'Interior glass polish', 'UV conditioning'],
   },
   {
     id: 'full',
     name: 'Interior + Exterior Bundle',
-    basePrice: 185,
+    basePrice: 200,
     duration: '6–10 hrs',
     includes: ['Full interior refresh', 'Steam cleaning & sanitization', 'Foam cannon pre-wash', 'Two-bucket hand wash', 'Iron & tar decontam.', 'Best value package'],
     featured: true,
