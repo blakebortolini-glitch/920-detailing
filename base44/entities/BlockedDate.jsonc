@@ -10,6 +10,11 @@
     "reason": {
       "type": "string",
       "description": "Optional reason for blocking this date"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended description or context for this blocked date (up to 1000 characters)",
+      "maxLength": 1000
     }
   },
   "required": [
