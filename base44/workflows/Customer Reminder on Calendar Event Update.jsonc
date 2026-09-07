@@ -1,0 +1,38 @@
+{
+  "name": "Customer Reminder on Calendar Event Update",
+  "description": "",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "connector",
+      "events": [
+        "events"
+      ],
+      "integration_type": "googlecalendar",
+      "resource_id": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "customer_reminder_on_calendar_event_update",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "run_function": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "calendarEventReminder",
+            "args": {}
+          },
+          "then": "end"
+        }
+      }
+    ]
+  },
+  "x-base44-migrated-from-automation": {
+    "legacy_payload_function": "calendarEventReminder"
+  }
+}
